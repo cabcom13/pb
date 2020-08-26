@@ -108,12 +108,25 @@ const store = new Vuex.Store({
         await fb.postsCollection.where("public", "in",[false, true]).where('userId', "==", userid).orderBy('createdOn', 'desc').onSnapshot(snapshot => {
           let postsArray = []    
           snapshot.forEach(doc => {
+            let data = {}
             let post = doc.data()
             post.id = doc.id
 
-            postsArray.push(post)
+            postsArray.push({
+              attached: Object.assign({}, post.attached),
+              comments: post.comments,
+              content: post.content,
+              createdOn: post.createdOn,
+              id: post.id,
+              image: post.image,
+              likes: post.likes,
+              public: post.public,
+              userId: post.userId,
+              userName: post.userName,
+              youtubeid: post.youtubeid
+            })
           })
-
+          console.log(postsArray)
           commit('setPosts', postsArray)
         })
     },
@@ -130,7 +143,19 @@ const store = new Vuex.Store({
           let post = doc.data()
           post.id = doc.id
 
-          postsArray.push(post)
+          postsArray.push({
+            attached: Object.assign({}, post.attached),
+            comments: post.comments,
+            content: post.content,
+            createdOn: post.createdOn,
+            id: post.id,
+            image: post.image,
+            likes: post.likes,
+            public: post.public,
+            userId: post.userId,
+            userName: post.userName,
+            youtubeid: post.youtubeid
+          })
         })
 
         commit('setPosts', postsArray)
@@ -187,7 +212,7 @@ const store = new Vuex.Store({
     },
 
     async updatePost({commit}, post){
-console.log( post)
+
       // update post likes count
       fb.postsCollection.doc(post.id).update({
         content: post.content,
@@ -240,9 +265,12 @@ console.log( post)
       });
   
     },
-    async createPost({ state, commit }, post) {
-  
 
+    
+    async createPost1({ state, commit }, post) {
+console.log(post.content.attached.title)
+    },
+    async createPost({ state, commit }, post) {
       const text = post.content.content
       const image = post.content.image
       const youtubeid = post.content.youtubeid
@@ -259,7 +287,8 @@ console.log( post)
         userId: fb.auth.currentUser.uid,
         userName: state.userProfile.name,
         comments: 0,
-        likes: 0
+        likes: 0,
+        attached:  post.content.attached
       })
   
       //upload image here

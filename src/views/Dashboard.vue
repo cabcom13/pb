@@ -14,8 +14,79 @@
                     <div class="mt-2"><b-btn size="sm" variant="danger" v-if="imageurl" @click="removeImage()">Bild entfernen</b-btn></div>
                   </div>  
 
-                  <div v-if="this.post.youtubeid" style="border-top:1px solid rgba(21,21,21,.09);border-bottom:1px solid rgba(21,21,21,.09);padding:.4rem 0;">
-                    
+                  <!-- ####################### Attachment System ######################## -->
+                  <div  v-if="showAttachedLoader" class="d-flex justify-content-center my-2" >
+                    <b-spinner small label="Loading..." class="mr-2" ></b-spinner>.... hole Informationen .....
+                  </div>
+      
+                  <div v-if="post.attached.pagetyp == 'webpage'" >
+                     
+                      <div class="p-2 border rounded position-relative" style="border-top:1px solid rgba(21,21,21,.09); background:rgba(21,21,21,.06)">
+                      <b-row  >
+                        <b-col cols="12" md="4">
+                           <b-img fluid rounded :src="post.attached.image"></b-img>
+                        </b-col>
+                        <b-col cols="12" md="8">
+                          <div class="mt-2">
+                            <a  :href="post.attached.url"><h6>{{post.attached.title}}</h6></a>
+                            <p>{{post.attached.description}}</p>
+                            <b-btn class="float-right position-absolute" style="bottom:0; right:10px" size="sm" variant="danger" @click="post.attached = ''">Link entfernen</b-btn>
+                          </div>
+                        </b-col>
+                      </b-row>
+                      </div>
+                     
+                  </div>
+                  <div v-if="post.attached.pagetyp == 'youtube'" >
+                      <div class="p-2 border rounded position-relative" style="border-top:1px solid rgba(21,21,21,.09); background:rgba(21,21,21,.06)">
+                      <b-row  >
+                        <b-col cols="12" md="4">
+                           <b-embed
+                              type="iframe"
+                              aspect="16by9"
+                              :src="'https://www.youtube.com/embed/'+post.attached.video_id"
+                              
+                            ></b-embed>
+                        </b-col>
+                        <b-col cols="12" md="8">
+                          <div class="mt-2">
+                            <a  :href="post.attached.url"><h6>{{post.attached.title}}</h6></a>
+                            <p>{{post.attached.description}}</p>
+                            <b-btn class="float-right position-absolute" style="bottom:0; right:10px" size="sm" variant="danger" @click="post.attached = ''">Video entfernen</b-btn>
+                          </div>
+                        </b-col>
+                      </b-row>
+                      </div>
+                  </div>
+                  <div v-if="post.attached.pagetyp == 'amazon'" >
+                    <div class="p-2 border rounded position-relative" style="border-top:1px solid rgba(21,21,21,.09); background:rgba(21,21,21,.06)">
+                      <b-row  >
+                        <b-col cols="12" md="4">
+                          <b-img fluid rounded :src="post.attached.img"></b-img>
+                        </b-col>
+                        <b-col cols="12" md="8">
+                          <div class="mt-2">
+                            <a  :href="post.attached.url"><h6>{{post.attached.title}}</h6></a>
+                            <p>{{post.attached.description}}</p>
+                            <b-btn class="float-right position-absolute" style="bottom:0; right:10px" size="sm" variant="danger" @click="post.attached = ''">Video entfernen</b-btn>
+                          </div>
+                        </b-col>
+                      </b-row>
+                      </div>
+                  </div> 
+                  <div v-if="post.attached.pagetyp == 'pinterest'" >
+                    <div class="p-2 border rounded position-relative" style="border-top:1px solid rgba(21,21,21,.09); background:rgba(21,21,21,.06)">
+                                       <iframe
+                              type="iframe"
+                              style="width:227px; height:450px;"
+             
+                              :src="'https://assets.pinterest.com/ext/embed.html?id='+post.attached.pinid"
+                              
+                            frameborder="0" scrolling="no" ></iframe>
+                            <b-btn class="float-right position-absolute" style="bottom:5px; right:10px" size="sm" variant="danger" @click="post.attached = ''">Pin entfernen</b-btn>
+                      </div>
+                  </div> 
+                  <!-- <div v-if="this.post.youtubeid" style="border-top:1px solid rgba(21,21,21,.09);border-bottom:1px solid rgba(21,21,21,.09);padding:.4rem 0;">
                     <small >Dieses Video wurde im Text gefunden</small>
                     <div style="width:210px;" class="mb-2">
                       
@@ -28,12 +99,14 @@
                       <b-btn size="sm" variant="danger" @click="clearVideo()">Video entfernen</b-btn>
                     
                     </div>
-                  </div>
+                  </div> -->
+
+                  <!-- ####################### Image File System ######################## -->
                   <input type="file" size="50" accept="image/*" ref="myfile" style="display:none;" @change="onFileChange">
                   <hr />
                   <b-row class="mb-3">
                     <b-col md="2" sm="4" cols="4">
-                      <b-btn size="sm"  variant="light"  @click="addFile()" :disabled="(showpreviewvideo != '') || (imageurl !== '')" v-b-tooltip.hover title="Füge ein Foto zu deinem Beitrag hinzu"><b-icon icon="card-image"  ></b-icon> Foto/Video</b-btn>
+                      <b-btn size="sm"  variant="light"  @click="addFile()" :disabled="(post.attached != '') || (imageurl !== '')" v-b-tooltip.hover title="Füge ein Foto zu deinem Beitrag hinzu"><b-icon icon="card-image"  ></b-icon> Foto/Video</b-btn>
                     </b-col>
                     <b-col md="3" sm="4" cols="4">
                       <b-form-checkbox v-model="post.public" name="check-button" switch class="mt-1 pointer" v-b-tooltip.hover title="Alle Benutzer können diesen Post sehen">
@@ -46,7 +119,7 @@
                   <b-progress :value="post_upload_loader.progress" variant="info" striped animated></b-progress>
                 </div>
                 <div>
-                  <b-button variant="primary" block @click="createPost()" :disabled="(post.content === '') && (post.youtubeid === '') && (imageurl === '')" >Beitrag teilen</b-button>
+                  <b-button variant="primary" block @click="createPost()" :disabled="(post.content === '') && (post.attached === '') && (imageurl === '')" >Beitrag teilen</b-button>
                 </div>        
 
             </b-form>
@@ -57,7 +130,6 @@
                 <b-button :variant="!showPublic ? 'info' : 'light'" @click="changePrivatePublic(true)">Meine Tagebucheinträge</b-button>
                 <b-button :variant="showPublic ? 'info' : 'light'" @click="changePrivatePublic(false)">alle öffentlichen Tagebucheinträge</b-button> 
           </b-button-group>
-
 
 
         <div v-if="posts.length" class="mt-4">
@@ -71,25 +143,87 @@
            <h6 class="text-muted text-light">
              <!--  -->
 
-            <strong v-if="!showPublic">Du </strong>
-            <strong v-if="showPublic">{{ post.userName }} </strong>
-            <span v-if="(post.content != '') && (post.image =='') && (showPublic)">schreibt </span>
-            <span v-if="(post.content != '') && (post.image =='') && (!showPublic)">schreibst </span>
-            <span v-if="(post.content == '') && (post.image !='')">postet ein Bild </span>
-            <span v-if="(post.content == '') && (post.image =='') && (post.youtubeid != '')">hat ein Video gepostet </span>
+           
+            <strong>{{ post.userName }} </strong>
+            
+            <span v-if="(post.attached.pagetyp == 'webpage')">hat einen Link gepostet </span>
+            <span v-if="(post.attached.pagetyp == 'youtube')">hat einen Video gepostet </span>
+            <span v-if="(post.attached.pagetyp == 'amazon')">hat einen Amazon Produkt gepostet </span>
+            <span v-if="(post.attached.pagetyp == 'pinterest')">hat einen Pin gepostet </span>
+
             <span >{{ post.createdOn | formatDate }}</span>
             
             </h6>
             <p class="pt-2" style="font-size:1.4em">{{post.content}}</p>
 
+
+            <!-- Attachment System -->
+
+                  <div v-if="post.attached.pagetyp == 'webpage'" >
+                     
+                      <div class="p-2 border rounded position-relative" style="border-top:1px solid rgba(21,21,21,.09); background:rgba(21,21,21,.06)">
+                      <b-row  >
+                        <b-col cols="12" md="4">
+                           <b-img fluid rounded :src="post.attached.image"></b-img>
+                        </b-col>
+                        <b-col cols="12" md="8">
+                          <div class="mt-2">
+                            <a  :href="post.attached.url"><h6>{{post.attached.title}}</h6></a>
+                            <p>{{post.attached.description}}</p>
+                           
+                          </div>
+                        </b-col>
+                      </b-row>
+                      </div>
+                     
+                  </div>
+                  <div v-if="post.attached.pagetyp == 'youtube'" >
+                            <b-embed
+                              type="iframe"
+                              aspect="16by9"
+                              :src="'https://www.youtube.com/embed/'+post.attached.video_id"
+                              
+                            ></b-embed>
+                            <div class="p-2 px-3" style="background:rgba(21,21,21,.95)">
+                              <h6><a class="text-white" :href="post.attached.url">{{post.attached.title}}</a></h6>
+                              <p class="text-muted">{{post.attached.description}}</p>
+                            </div>
+                  </div>
+                  <div v-if="post.attached.pagetyp == 'amazon'" >
+                    <div class="p-2 border rounded position-relative" style="border-top:1px solid rgba(21,21,21,.09); background:rgba(21,21,21,.06)">
+                      <b-row  >
+                        <b-col cols="12" md="4">
+                          <b-img fluid rounded :src="post.attached.img"></b-img>
+                        </b-col>
+                        <b-col cols="12" md="8">
+                          <div class="mt-2">
+                            <a  :href="post.attached.url"><h6>{{post.attached.title}}</h6></a>
+                            <p>{{post.attached.description}}</p>
+                           
+                          </div>
+                        </b-col>
+                      </b-row>
+                      </div>
+                  </div> 
+                  <div v-if="post.attached.pagetyp == 'pinterest'" >
+                    <div class="p-2 border rounded position-relative" style="border-top:1px solid rgba(21,21,21,.09); background:rgba(21,21,21,.06)">
+                                     
+                                     <b-embed
+                                      :src="'https://assets.pinterest.com/ext/embed.html?id='+post.attached.pinid"
+                                     ></b-embed>
+                                   
+                         
+                      </div>
+                  </div> 
+
+
             <b-img fluid :src="post.image" ></b-img>
- 
-            <b-embed
+             <!-- <b-embed
             type="iframe"
             aspect="16by9"
             :src="'https://www.youtube.com/embed/'+post.youtubeid"
             v-if="post.youtubeid"
-          ></b-embed>
+          ></b-embed> -->
         
               <div class="post-actions">
                 <b-button variant="link" size="sm" @click="toggleComment(post)"><b-icon icon="chat-fill" aria-hidden="true"></b-icon> {{ post.comments }}</b-button>
@@ -217,7 +351,8 @@ export default {
         content: '',
         image:'',
         youtubeid: '',
-        public:false
+        public:false,
+        attached: false
       },
  
       selectedPost: {},
@@ -230,23 +365,32 @@ export default {
       showpreviewvideo:'',
       showPublic:false,
       showCommentSection: false,
+      showAttachedLoader: false,
       editPostObj: ''
    
     }
   },
   watch: {
-
+    childArray: {      
+        handler (newData) {        
+          this.currentArray = newData
+        }
+       
+      }     
   },
   created () {
     moment.locale("de");
     this.$store.dispatch('loadPrivatePosts')
     
   },
+
   mounted(){
     
   },
   computed: {
     ...mapState(['userProfile', 'posts', 'post_upload_loader', 'comments', 'showCommentsLoader'])
+ 
+
 
   },
   methods: {
@@ -274,21 +418,45 @@ export default {
         this.post.youtubeid = ''
     },
     watchVideoUrl:function(){
-      let youtube_video_reg = /(?:https?:\/\/)?(?:www\.)?youtu\.?be(?:\.com)?\/?.*(?:watch|embed)?(?:.*v=|v\/|\/)([\w-_]+)/i
-      if(this.post.youtubeid == ''){
-        if(this.post.content.match(youtube_video_reg)){
-          this.post.youtubeid = this.youtubeid(this.post.content)
-          
-          let youtube_video_reg = /(?:https?:\/\/)?(?:www\.)?youtu\.?be(?:\.com)?\/?.*(?:watch|embed)?(?:.*v=|v\/|\/)([\w-_]+)/i
-          let newtext =  this.post.content.replace(youtube_video_reg,'')
-          this.post.content = newtext
-        } else {
-          this.post.youtubeid = ''
-        }
-      }
-      //
-        
+          const regex = /(https?:[^\s]+)/;
+
+          if(this.post.content.match(regex)){
+              this.post.attached = ''
+              this.post.youtubeid = ''
+              const url = this.post.content.match(regex)[0]
+              let newtext =  this.post.content.replace(url,'')
+              
+              if(url && !this.post.attached){
+                  this.showAttachedLoader= true
+                 fetch("https://urlinfo.cabcom13.de/?u="+url)
+                .then(response => response.json())
+                .then(data => {
+                  this.showAttachedLoader= false
+                  this.post.attached = data
+                  if(this.post.attached.pagetyp == 'youtube'){
+                    this.post.youtubeid = this.post.attached.video_id
+                  }
+                })               
+              }           
+              this.post.content = newtext  
+          }
     },
+    // watchVideoUrl:function(){
+    //   let youtube_video_reg = /(?:https?:\/\/)?(?:www\.)?youtu\.?be(?:\.com)?\/?.*(?:watch|embed)?(?:.*v=|v\/|\/)([\w-_]+)/i
+    //   if(this.post.youtubeid == ''){
+    //     if(this.post.content.match(youtube_video_reg)){
+    //       this.post.youtubeid = this.youtubeid(this.post.content)
+          
+    //       let youtube_video_reg = /(?:https?:\/\/)?(?:www\.)?youtu\.?be(?:\.com)?\/?.*(?:watch|embed)?(?:.*v=|v\/|\/)([\w-_]+)/i
+    //       let newtext =  this.post.content.replace(youtube_video_reg,'')
+    //       this.post.content = newtext
+    //     } else {
+    //       this.post.youtubeid = ''
+    //     }
+    //   }
+    //   //
+        
+    // },
     youtubeid: function(url){
         var ID = '';
         url = url.replace(/(>|<)/gi,'').split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/);
@@ -359,6 +527,7 @@ export default {
       this.imageurl = ''
       this.post.youtubeid = ''
       this.post.public = false
+      this.post.attached = ''
 
 
     },
