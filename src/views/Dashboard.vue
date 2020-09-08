@@ -1,12 +1,8 @@
 <template>
-  <div id="dashboard">
-
+<div id="dashboard">
  <b-row>
-
     <b-col  sm="12" md="12">
-<!-- <iframe src="https://assets.pinterest.com/ext/embed.html?id=985231156172417" height="415" width="236" frameborder="0" scrolling="no" ></iframe> -->
           <div class="create-post mt-4 mb-5 rounded" >
-
             <b-form @submit.prevent>
               <textarea class="textarea mb-3" style="width:100%;border:none;" v-model.trim="post.content" placeholder="Lass deiner Fantasie freien lauf...." v-on:input="watchVideoUrl"></textarea>
                   <div>
@@ -20,7 +16,6 @@
                   </div>
       
                   <div v-if="post.attached.pagetyp == 'webpage'" >
-                     
                       <div class="p-2 border rounded position-relative" style="border-top:1px solid rgba(21,21,21,.09); background:rgba(21,21,21,.06)">
                       <b-row  >
                         <b-col cols="12" md="4">
@@ -35,8 +30,8 @@
                         </b-col>
                       </b-row>
                       </div>
-                     
                   </div>
+
                   <div v-if="post.attached.pagetyp == 'youtube'" >
                       <div class="p-2 border rounded position-relative" style="border-top:1px solid rgba(21,21,21,.09); background:rgba(21,21,21,.06)">
                       <b-row  >
@@ -58,6 +53,7 @@
                       </b-row>
                       </div>
                   </div>
+
                   <div v-if="post.attached.pagetyp == 'amazon'" >
                     <div class="p-2 border rounded position-relative" style="border-top:1px solid rgba(21,21,21,.09); background:rgba(21,21,21,.06)">
                       <b-row  >
@@ -73,7 +69,8 @@
                         </b-col>
                       </b-row>
                       </div>
-                  </div> 
+                  </div>
+
                   <div v-if="post.attached.pagetyp == 'pinterest'" >
                     <div class="p-2 border rounded position-relative" style="border-top:1px solid rgba(21,21,21,.09); background:rgba(21,21,21,.06)">
                                        <iframe
@@ -86,24 +83,11 @@
                             <b-btn class="float-right position-absolute" style="bottom:5px; right:10px" size="sm" variant="danger" @click="post.attached = ''">Pin entfernen</b-btn>
                       </div>
                   </div> 
-                  <!-- <div v-if="this.post.youtubeid" style="border-top:1px solid rgba(21,21,21,.09);border-bottom:1px solid rgba(21,21,21,.09);padding:.4rem 0;">
-                    <small >Dieses Video wurde im Text gefunden</small>
-                    <div style="width:210px;" class="mb-2">
-                      
-                      <b-embed
-                        type="iframe"
-                        aspect="16by9"
-                        :src="'https://www.youtube.com/embed/'+this.post.youtubeid"
-                        
-                      ></b-embed>
-                      <b-btn size="sm" variant="danger" @click="clearVideo()">Video entfernen</b-btn>
-                    
-                    </div>
-                  </div> -->
 
                   <!-- ####################### Image File System ######################## -->
                   <input type="file" size="50" accept="image/*" ref="myfile" style="display:none;" @change="onFileChange">
                   <hr />
+                  
                   <b-row class="mb-3">
                     <b-col md="2" sm="4" cols="4">
                       <b-btn size="sm"  variant="light"  @click="addFile()" :disabled="(post.attached != '') || (imageurl !== '')" v-b-tooltip.hover title="Füge ein Foto zu deinem Beitrag hinzu"><b-icon icon="card-image"  ></b-icon> Foto/Video</b-btn>
@@ -115,17 +99,18 @@
                     </b-col> 
                   </b-row>
                 
-                <div class="my-4">
-                  <b-progress :value="post_upload_loader.progress" variant="info" striped animated></b-progress>
-                </div>
-                <div>
-                  <b-button variant="primary" block @click="createPost()" :disabled="(post.content === '') && (post.attached === '') && (imageurl === '')" >Beitrag teilen</b-button>
-                </div>        
-
+                  <div class="my-4">
+                    <b-progress :value="post_upload_loader.progress" variant="info" striped animated></b-progress>
+                  </div>
+                  <div>
+                    <b-button variant="primary" block @click="createPost()" :disabled="(post.content === '') && (post.attached === '') && (imageurl === '')" >Beitrag teilen</b-button>
+                  </div>        
             </b-form>
             
           </div>
+
           <hr />
+
           <b-button-group>
                 <b-button :variant="!showPublic ? 'info' : 'light'" @click="changePrivatePublic(true)">Meine Tagebucheinträge</b-button>
                 <b-button :variant="showPublic ? 'info' : 'light'" @click="changePrivatePublic(false)">alle öffentlichen Tagebucheinträge</b-button> 
@@ -140,19 +125,15 @@
               <b-badge variant="warning" pill v-if="post.public"><b-icon icon="unlock"></b-icon> Öffentlich</b-badge>
               <b-badge variant="primary" pill v-if="!post.public"><b-icon icon="lock"></b-icon>  Privat</b-badge>
              </div>
-           <h6 class="text-muted text-light">
-             <!--  -->
-
-           
-            <strong>{{ post.userName }} </strong>
+            <h6 class="text-muted text-light">
             
-            <span v-if="(post.attached.pagetyp == 'webpage')">hat einen Link gepostet </span>
-            <span v-if="(post.attached.pagetyp == 'youtube')">hat einen Video gepostet </span>
-            <span v-if="(post.attached.pagetyp == 'amazon')">hat einen Amazon Produkt gepostet </span>
-            <span v-if="(post.attached.pagetyp == 'pinterest')">hat einen Pin gepostet </span>
-
-            <span >{{ post.createdOn | formatDate }}</span>
-            
+              <strong>{{ post.userName }} </strong>
+              <span v-if="(post.attached.pagetyp == 'webpage')">hat einen Link gepostet </span>
+              <span v-if="(post.attached.pagetyp == 'youtube')">hat einen Video gepostet </span>
+              <span v-if="(post.attached.pagetyp == 'amazon')">hat einen Amazon Produkt gepostet </span>
+              <span v-if="(post.attached.pagetyp == 'pinterest')">hat einen Pin gepostet </span>
+              <span >{{ post.createdOn | formatDate }}</span>
+              
             </h6>
             <p class="pt-2" style="font-size:1.4em">{{post.content}}</p>
 
@@ -207,25 +188,17 @@
                   </div> 
                   <div v-if="post.attached.pagetyp == 'pinterest'" >
                     <div class="p-2 border rounded position-relative" style="border-top:1px solid rgba(21,21,21,.09); background:rgba(21,21,21,.06)">
-                                     
-                                     <b-embed
-                                      :src="'https://assets.pinterest.com/ext/embed.html?id='+post.attached.pinid"
-                                     ></b-embed>
-                                   
-                         
+                        <b-embed
+                        :src="'https://assets.pinterest.com/ext/embed.html?id='+post.attached.pinid"
+                        ></b-embed>
                       </div>
                   </div> 
 
 
-            <b-img fluid :src="post.image" ></b-img>
-             <!-- <b-embed
-            type="iframe"
-            aspect="16by9"
-            :src="'https://www.youtube.com/embed/'+post.youtubeid"
-            v-if="post.youtubeid"
-          ></b-embed> -->
+            <b-img-lazy fluid  :src="post.image" :blank-src="lazyloadimgsrc"></b-img-lazy>
+            <!-- <b-img fluid :src="post.image" ></b-img> -->
         
-              <div class="post-actions">
+            <div class="post-actions">
                 <b-button variant="link" size="sm" @click="toggleComment(post)"><b-icon icon="chat-fill" aria-hidden="true"></b-icon> {{ post.comments }}</b-button>
                 <b-button variant="link" size="sm" @click="likePost(post.id, post.likes)"><b-icon icon="hand-thumbs-up" aria-hidden="true"></b-icon> {{ post.likes }}</b-button>
                 <b-button variant="link" size="sm" @click="changePostStatus(post.id, !post.public)" v-if="post.userId === userProfile.userid">
@@ -240,9 +213,9 @@
           
 
             <b-card v-if="showCommentSection == post.id" class="mt-3">
-              <b-btn size="sm" @click="close()" style="position:absolute; right:1em;z-index:1000"><b-icon icon="chevron-compact-up"></b-icon></b-btn>
-            <CommentModal  :post="post" :user="userProfile" @update="toggleComment(post)"></CommentModal>
+            <b-btn size="sm" @click="close()" style="position:absolute; right:1em;z-index:1000"><b-icon icon="chevron-compact-up"></b-icon></b-btn>
             
+            <CommentModal  :post="post" :user="userProfile" @update="toggleComment(post)"></CommentModal>
            
             <h6>{{comments.length}} Kommentar</h6>
 
@@ -283,7 +256,7 @@
         </div>
         <div v-else>
           <div  class="post my-3 shadow-sm p-3 rounded">
-          <p class="no-results">Es gibts zur Zeit keine Einträge.</p>
+          <p class="no-results mt-3">Es gibts zur Zeit keine Einträge.</p>
           </div>
         </div>
 
@@ -354,7 +327,7 @@ export default {
         public:false,
         attached: false
       },
- 
+      lazyloadimgsrc:'https://via.placeholder.com/1200x768.png?text=PrayBook',
       selectedPost: {},
       showPostModal: false,
       fullPost: {},
