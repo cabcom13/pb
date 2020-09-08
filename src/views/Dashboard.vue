@@ -1,7 +1,11 @@
 <template>
 <div id="dashboard">
  <b-row>
-    <b-col  sm="12" md="12">
+    <b-col md="4" sm="12" order-md="2" order-sm="1">
+          <UserPanel></UserPanel>
+          <hr class="my-4" />
+    </b-col>
+    <b-col sm="12" md="8" order-md="1" order-sm="2">
           <div class="create-post mt-4 mb-5 rounded" >
             <b-form @submit.prevent>
               <textarea class="textarea mb-3" style="width:100%;border:none;" v-model.trim="post.content" placeholder="Lass deiner Fantasie freien lauf...." v-on:input="watchVideoUrl"></textarea>
@@ -194,10 +198,8 @@
                       </div>
                   </div> 
 
+            <b-img-lazy fluid-grow  :src="post.image"  blank-color="#cfd8dc" blank-width="1024" blank-height="768"></b-img-lazy>
 
-            <b-img-lazy fluid  :src="post.image" :blank-src="lazyloadimgsrc"></b-img-lazy>
-            <!-- <b-img fluid :src="post.image" ></b-img> -->
-        
             <div class="post-actions">
                 <b-button variant="link" size="sm" @click="toggleComment(post)"><b-icon icon="chat-fill" aria-hidden="true"></b-icon> {{ post.comments }}</b-button>
                 <b-button variant="link" size="sm" @click="likePost(post.id, post.likes)"><b-icon icon="hand-thumbs-up" aria-hidden="true"></b-icon> {{ post.likes }}</b-button>
@@ -207,9 +209,7 @@
                 </b-button>
                 <b-btn variant="link" size="sm" @click="editPost(post)" v-if="post.userId === userProfile.userid"><b-icon icon="pencil"></b-icon> Bearbeiten</b-btn>
                 <b-btn class="float-right text-danger" variant="link" size="sm" @click="deletePost(post.id)" v-if="post.userId === userProfile.userid"><b-icon icon="trash"></b-icon></b-btn>
-
             </div>
-            
           
 
             <b-card v-if="showCommentSection == post.id" class="mt-3">
@@ -261,10 +261,7 @@
         </div>
 
     </b-col>
-    <b-col md="2"  sm="12">
-          
- 
-    </b-col>
+
   </b-row>
 
 
@@ -305,12 +302,14 @@ import { commentsCollection, usersCollection } from '@/firebase'
 import { mapState } from 'vuex'
 import moment from 'moment'
 import CommentModal from '@/components/CommentModal'
+import UserPanel from '@/components/UserPanel'
 import * as fb from '../firebase'
 
 
 export default {
   components: {
-    CommentModal
+    CommentModal,
+    UserPanel
 
   },
   metaInfo() {

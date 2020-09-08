@@ -10,19 +10,6 @@
                 <b-nav-item to="/">Startseite</b-nav-item>
                 <b-nav-item to="/settings" >Einstellungen</b-nav-item>
             </b-navbar-nav>
-            <b-navbar-nav class="ml-auto">
-               
-                <b-nav-item-dropdown right>
-                    <!-- Using 'button-content' slot -->
-                    <template v-slot:button-content>
-                     <b-navbar-brand to="/settings">
-                        <b-avatar class="" size="2em"  :text="userProfile.name | initial" :src="userProfile.avatar"></b-avatar>
-                    </b-navbar-brand>
-                    </template>
-                       <b-dropdown-item @click="logout()">Logout</b-dropdown-item>
-                </b-nav-item-dropdown>
-            </b-navbar-nav>
-
             </b-collapse>
         </b-container>
     </b-navbar>
