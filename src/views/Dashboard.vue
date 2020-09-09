@@ -2,11 +2,11 @@
 <div id="dashboard">
  <b-row>
     <b-col md="3" sm="12" order-md="2" order-sm="1">
-          <UserPanel></UserPanel>
-          <hr class="my-4" />
-          Deine Freunde
- 
-          <FriendList></FriendList>
+      <UserPanel></UserPanel>
+      <hr class="my-4" />
+     <!--  Deine Freunde
+
+      <FriendList></FriendList> -->
     </b-col>
     <b-col sm="12" md="9" order-md="1" order-sm="2">
           <div class="create-post mt-4 mb-5 rounded" >
@@ -96,21 +96,25 @@
                   <hr />
                   
                   <b-row class="mb-3">
-                    <b-col md="2" sm="4" cols="4">
+                    <b-col md="9" sm="4" cols="6">
                       <b-btn size="sm"  variant="light"  @click="addFile()" :disabled="(post.attached != '') || (imageurl !== '')" v-b-tooltip.hover title="Füge ein Foto zu deinem Beitrag hinzu"><b-icon icon="card-image"  ></b-icon> Foto/Video</b-btn>
                     </b-col>
-                    <b-col md="3" sm="4" cols="4">
-                      <b-form-checkbox v-model="post.public" name="check-button" switch class="mt-1 pointer" v-b-tooltip.hover title="Alle Benutzer können diesen Post sehen">
+                    <b-col md="3" sm="4" cols="6" class="pull-right">
+                      <b-form-select v-model="post.public" :options="options" size="sm"> 
+
+                      </b-form-select>
+                      <!-- <b-form-checkbox v-model="post.public" name="check-button" switch class="mt-1 pointer" v-b-tooltip.hover title="Alle Benutzer können diesen Post sehen">
                             <small>Öffentlicher Post </small>
-                      </b-form-checkbox>
+                      </b-form-checkbox> -->
                     </b-col> 
                   </b-row>
                 
-                  <div class="my-4">
+                  <div class="my-4" v-if="post.attached != ''">
                     <b-progress :value="post_upload_loader.progress" variant="info" striped animated></b-progress>
                   </div>
+                  
                   <div>
-                    <b-button variant="primary" block @click="createPost()" :disabled="(post.content === '') && (post.attached === '') && (imageurl === '')" >Beitrag teilen</b-button>
+                    <b-btn variant="info" @click="createPost()" :disabled="(post.content === '') && (post.attached === '') && (imageurl === '')" ><i class="fa fa-share-square-o" aria-hidden="true"></i> Beitrag teilen</b-btn>
                   </div>        
             </b-form>
             
@@ -119,29 +123,28 @@
           <hr />
 
           <b-button-group>
-                <b-button :variant="!showPublic ? 'info' : 'light'" @click="changePrivatePublic(true)">Meine Tagebucheinträge</b-button>
-                <b-button :variant="showPublic ? 'info' : 'light'" @click="changePrivatePublic(false)">alle öffentlichen Tagebucheinträge</b-button> 
+                <b-button :variant="!showPublic ? 'info' : 'light'" @click="changePrivatePublic(true)"><i class="fa fa-user-secret" aria-hidden="true"></i> Meine Tagebucheinträge</b-button>
+                <b-button :variant="showPublic ? 'info' : 'light'" @click="changePrivatePublic(false)"><i class="fa fa-globe" aria-hidden="true"></i> Öffentliche Einträge</b-button> 
           </b-button-group>
 
 
         <div v-if="posts.length" class="mt-4">
           <div v-for="post in posts" :key="post.id" >
             <div  class="post my-3 shadow-sm p-3 rounded">
-           
-           <div class="float-right">
-              <b-badge variant="warning" pill v-if="post.public"><b-icon icon="unlock"></b-icon> Öffentlich</b-badge>
-              <b-badge variant="primary" pill v-if="!post.public"><b-icon icon="lock"></b-icon>  Privat</b-badge>
-             </div>
-            <h6 class="text-muted text-light">
-            
-              <strong>{{ post.userName }} </strong>
-              <span v-if="(post.attached.pagetyp == 'webpage')">hat einen Link gepostet </span>
-              <span v-if="(post.attached.pagetyp == 'youtube')">hat einen Video gepostet </span>
-              <span v-if="(post.attached.pagetyp == 'amazon')">hat einen Amazon Produkt gepostet </span>
-              <span v-if="(post.attached.pagetyp == 'pinterest')">hat einen Pin gepostet </span>
-              <span >{{ post.createdOn | formatDate }}</span>
-              
-            </h6>
+            <div class="rounded bg-light pr-2 pl-2 text-muted">
+              <i class="fa fa-user-secret mr-2" v-if="!post.public" aria-hidden="true"></i>  
+              <i class="fa fa-globe mr-2" v-if="post.public" aria-hidden="true"></i>  
+              <h6 class="d-inline">
+
+                <strong >{{ post.userName }} </strong>
+                <span v-if="(post.attached.pagetyp == 'webpage')">hat einen Link gepostet </span>
+                <span v-if="(post.attached.pagetyp == 'youtube')">hat einen Video gepostet </span>
+                <span v-if="(post.attached.pagetyp == 'amazon')">hat einen Amazon Produkt gepostet </span>
+                <span v-if="(post.attached.pagetyp == 'pinterest')">hat einen Pin gepostet </span>
+                <span >{{ post.createdOn | formatDate }}</span>
+                
+              </h6>
+            </div>
             <p class="pt-2" style="font-size:1.4em">{{post.content}}</p>
 
 
@@ -207,11 +210,11 @@
                 <b-button variant="link" size="sm" @click="toggleComment(post)"><b-icon icon="chat-fill" aria-hidden="true"></b-icon> {{ post.comments }}</b-button>
                 <b-button variant="link" size="sm" @click="likePost(post.id, post.likes)"><b-icon icon="hand-thumbs-up" aria-hidden="true"></b-icon> {{ post.likes }}</b-button>
                 <b-button variant="link" size="sm" @click="changePostStatus(post.id, !post.public)" v-if="post.userId === userProfile.userid">
-                  <span v-if="post.public"><b-icon icon="lock"></b-icon> Privat machen</span>
-                  <span v-if="!post.public"><b-icon icon="unlock"></b-icon>Öffentlich machen</span>
+                  <span v-if="post.public"><i class="fa fa-user-secret" aria-hidden="true"></i> Privat machen</span>
+                  <span v-if="!post.public"><i class="fa fa-globe" aria-hidden="true"></i> Öffentlich machen</span>
                 </b-button>
                 <b-btn variant="link" size="sm" @click="editPost(post)" v-if="post.userId === userProfile.userid"><b-icon icon="pencil"></b-icon> Bearbeiten</b-btn>
-                <b-btn class="float-right text-danger" variant="link" size="sm" @click="deletePost(post.id)" v-if="post.userId === userProfile.userid"><b-icon icon="trash"></b-icon></b-btn>
+                <b-btn class="float-right text-danger" variant="link" size="sm" @click="deletePost(post.id)" v-if="post.userId === userProfile.userid"><i class="fa fa-trash" aria-hidden="true"></i></b-btn>
             </div>
           
 
@@ -306,7 +309,7 @@ import { mapState } from 'vuex'
 import moment from 'moment'
 import CommentModal from '@/components/CommentModal'
 import UserPanel from '@/components/UserPanel'
-import FriendList from '@/components/FriendList'
+// import FriendList from '@/components/FriendList'
 import * as fb from '../firebase'
 
 
@@ -314,7 +317,7 @@ export default {
   components: {
     CommentModal,
     UserPanel,
-    FriendList
+    // FriendList
 
   },
   metaInfo() {
@@ -343,7 +346,12 @@ export default {
       showPublic:false,
       showCommentSection: false,
       showAttachedLoader: false,
-      editPostObj: ''
+      editPostObj: '',
+      options: [
+          { value: true, text: 'Öffentlich' },
+          { value: false, text: 'Privat' },
+
+        ]
    
     }
   },
