@@ -1,11 +1,14 @@
 <template>
 <div id="dashboard">
  <b-row>
-    <b-col md="4" sm="12" order-md="2" order-sm="1">
+    <b-col md="3" sm="12" order-md="2" order-sm="1">
           <UserPanel></UserPanel>
           <hr class="my-4" />
+          Deine Freunde
+ 
+          <FriendList></FriendList>
     </b-col>
-    <b-col sm="12" md="8" order-md="1" order-sm="2">
+    <b-col sm="12" md="9" order-md="1" order-sm="2">
           <div class="create-post mt-4 mb-5 rounded" >
             <b-form @submit.prevent>
               <textarea class="textarea mb-3" style="width:100%;border:none;" v-model.trim="post.content" placeholder="Lass deiner Fantasie freien lauf...." v-on:input="watchVideoUrl"></textarea>
@@ -303,13 +306,15 @@ import { mapState } from 'vuex'
 import moment from 'moment'
 import CommentModal from '@/components/CommentModal'
 import UserPanel from '@/components/UserPanel'
+import FriendList from '@/components/FriendList'
 import * as fb from '../firebase'
 
 
 export default {
   components: {
     CommentModal,
-    UserPanel
+    UserPanel,
+    FriendList
 
   },
   metaInfo() {
