@@ -1,17 +1,19 @@
 <template>
 <div id="dashboard">
  <b-row>
-    <b-col md="3" sm="12" order-md="2" order-sm="1">
-      <UserPanel></UserPanel>
-      <hr class="my-4" />
-     <!--  Deine Freunde
 
-      <FriendList></FriendList> -->
-    </b-col>
-    <b-col sm="12" md="9" order-md="1" order-sm="2">
+    <b-col sm="12" md="12" order-md="1" order-sm="2">
           <div class="create-post mt-4 mb-5 rounded" >
             <b-form @submit.prevent>
-              <textarea class="textarea mb-3" style="width:100%;border:none;" v-model.trim="post.content" placeholder="Lass deiner Fantasie freien lauf...." v-on:input="watchVideoUrl"></textarea>
+                  <b-row>
+                    <b-col cols="3" sm="3" md="2">
+                      <UserPanel></UserPanel>
+                    </b-col>
+                    <b-col cols="9" sm="9" md=10>
+                      <textarea @click="setFocus()" :rows="textareaRows" class="textarea mb-3" style="width:100%;" v-model.trim="post.content" placeholder="Lass deiner Fantasie freien lauf...." v-on:input="watchVideoUrl"></textarea>
+                    </b-col>
+                  </b-row> 
+              
                   <div>
                     <b-img style="width:150px;" v-if="imageurl" :src="imageurl" ></b-img>
                     <div class="mt-2"><b-btn size="sm" variant="danger" v-if="imageurl" @click="removeImage()">Bild entfernen</b-btn></div>
@@ -95,14 +97,16 @@
                   <input type="file" size="50" accept="image/*" ref="myfile" style="display:none;" @change="onFileChange">
                   <hr />
                   
-                  <b-row class="mb-3">
-                    <b-col md="9" sm="4" cols="6">
+                  <b-row class="mb-3" v-show="onFocus" >
+                    <b-col md="9" sm="4" cols="12">
                       <b-btn size="sm"  variant="light"  @click="addFile()" :disabled="(post.attached != '') || (imageurl !== '')" v-b-tooltip.hover title="Füge ein Foto zu deinem Beitrag hinzu"><b-icon icon="card-image"  ></b-icon> Foto/Video</b-btn>
                     </b-col>
-                    <b-col md="3" sm="4" cols="6" class="pull-right">
-                      <b-form-select v-model="post.public" :options="options" size="sm"> 
-
-                      </b-form-select>
+                    <b-col cols="12" class="d-block d-sm-none mt-2" ></b-col>
+                    <b-col md="3" sm="4" cols="12" class="pull-right">
+                    <b-form-select v-model="post.public" :options="options" size="sm"></b-form-select>
+                 
+                    
+                      
                       <!-- <b-form-checkbox v-model="post.public" name="check-button" switch class="mt-1 pointer" v-b-tooltip.hover title="Alle Benutzer können diesen Post sehen">
                             <small>Öffentlicher Post </small>
                       </b-form-checkbox> -->
@@ -138,8 +142,8 @@
 
                 <strong >{{ post.userName }} </strong>
                 <span v-if="(post.attached.pagetyp == 'webpage')">hat einen Link gepostet </span>
-                <span v-if="(post.attached.pagetyp == 'youtube')">hat einen Video gepostet </span>
-                <span v-if="(post.attached.pagetyp == 'amazon')">hat einen Amazon Produkt gepostet </span>
+                <span v-if="(post.attached.pagetyp == 'youtube')">hat ein Video gepostet </span>
+                <span v-if="(post.attached.pagetyp == 'amazon')">hat ein Amazon Produkt gepostet </span>
                 <span v-if="(post.attached.pagetyp == 'pinterest')">hat einen Pin gepostet </span>
                 <span >{{ post.createdOn | formatDate }}</span>
                 
@@ -327,6 +331,8 @@ export default {
   },
   data() {
     return {
+      textareaRows:1,
+      onFocus: false,
       post: {
         content: '',
         image:'',
@@ -374,11 +380,16 @@ export default {
   },
   computed: {
     ...mapState(['userProfile', 'posts', 'post_upload_loader', 'comments', 'showCommentsLoader'])
- 
-
-
-  },
+   },
   methods: {
+    setLostFocus(){
+      this.onFocus = false
+      this.textareaRows = 1
+    },
+    setFocus(){
+      this.onFocus = true
+      this.textareaRows = 4
+    },
     updatePost(){
         //dispatch here
         this.$store.dispatch('updatePost',this.editPostObj )
@@ -513,7 +524,7 @@ export default {
       this.post.youtubeid = ''
       this.post.public = false
       this.post.attached = ''
-
+      this.setLostFocus()
 
     },
     deleteComment(comemntid, post){
@@ -576,7 +587,7 @@ export default {
   color:#212121!important;
 }
 .textarea{
- border: none;
+  border: none;
     background-color: transparent;
     resize: none;
     outline: none;
