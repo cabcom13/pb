@@ -52,8 +52,8 @@
                         </b-col>
                         <b-col cols="12" md="8">
                           <div class="mt-2">
-                            <a  :href="post.attached.url"><h6>{{post.attached.title}}</h6></a>
-                            <p>{{post.attached.description}}</p>
+                            <!-- <a  :href="post.attached.url"><h6>{{post.attached.title}}</h6></a>
+                            <p>{{post.attached.description}}</p> -->
                             <b-btn class="float-right position-absolute" style="bottom:0; right:10px" size="sm" variant="danger" @click="post.attached = ''">Video entfernen</b-btn>
                           </div>
                         </b-col>
@@ -175,10 +175,10 @@
                               :src="'https://www.youtube.com/embed/'+post.attached.video_id"
                               
                             ></b-embed>
-                            <div class="p-2 px-3" style="background:rgba(21,21,21,.95)">
+                            <!-- <div class="p-2 px-3" style="background:rgba(21,21,21,.95)">
                               <h6><a class="text-white" :href="post.attached.url">{{post.attached.title}}</a></h6>
                               <p class="text-muted">{{post.attached.description}}</p>
-                            </div>
+                            </div> -->
                   </div>
                   <div v-if="post.attached.pagetyp == 'amazon'" >
                     <div class="p-2 border rounded position-relative" style="border-top:1px solid rgba(21,21,21,.09); background:rgba(21,21,21,.06)">
