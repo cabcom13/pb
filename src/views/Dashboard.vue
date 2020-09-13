@@ -14,11 +14,17 @@
                     </b-col>
                   </b-row> 
               
-                  <div>
-                    <b-img style="width:150px;" v-if="imageurl" :src="imageurl" ></b-img>
-                    <div class="mt-2"><b-btn size="sm" variant="danger" v-if="imageurl" @click="removeImage()">Bild entfernen</b-btn></div>
-                  </div>  
-
+                  <b-row class="my-3">
+                    <b-col cols="12" md="2">
+                      <b-img fluid v-if="imageurl" :src="imageurl" ></b-img>
+                    </b-col>
+                    <b-col cols="12" md="2">
+                      <div class="mt-2"><b-btn size="sm" variant="danger" v-if="imageurl" @click="removeImage()">Bild entfernen</b-btn></div>
+                    </b-col>
+                  </b-row>  
+                  <div class="my-4" v-if="imageurl != ''">
+                    <b-progress :value="post_upload_loader.progress" variant="info" striped animated></b-progress>
+                  </div>
                   <!-- ####################### Attachment System ######################## -->
                   <div  v-if="showAttachedLoader" class="d-flex justify-content-center my-2" >
                     <b-spinner small label="Loading..." class="mr-2" ></b-spinner>.... hole Informationen .....
@@ -42,25 +48,24 @@
                   </div>
 
                   <div v-if="post.attached.pagetyp == 'youtube'" >
-                      <div class="p-2 border rounded position-relative" style="border-top:1px solid rgba(21,21,21,.09); background:rgba(21,21,21,.06)">
-                      <b-row  >
+                      
+                      <b-row  class="my-3">
                         <b-col cols="12" md="4">
                            <b-embed
                               type="iframe"
                               aspect="16by9"
                               :src="'https://www.youtube.com/embed/'+post.attached.video_id"
-                              
                             ></b-embed>
                         </b-col>
                         <b-col cols="12" md="8">
                           <div class="mt-2">
                             <!-- <a  :href="post.attached.url"><h6>{{post.attached.title}}</h6></a>
                             <p>{{post.attached.description}}</p> -->
-                            <b-btn class="float-right position-absolute" style="bottom:0; right:10px" size="sm" variant="danger" @click="post.attached = ''">Video entfernen</b-btn>
+                            <b-btn style="bottom:0; right:10px" size="sm" variant="danger" @click="post.attached = ''">Video entfernen</b-btn>
                           </div>
                         </b-col>
                       </b-row>
-                      </div>
+                     
                   </div>
 
                   <div v-if="post.attached.pagetyp == 'amazon'" >
@@ -99,7 +104,7 @@
                   
                   <b-row class="mb-3" v-show="onFocus" >
                     <b-col md="9" sm="4" cols="12">
-                      <b-btn size="sm"  variant="light"  @click="addFile()" :disabled="(post.attached != '') || (imageurl !== '')" v-b-tooltip.hover title="Füge ein Foto zu deinem Beitrag hinzu"><b-icon icon="card-image"  ></b-icon> Foto/Video</b-btn>
+                      <b-btn size="sm"  variant="light"  @click="addFile()" :disabled="(post.attached != '') || (imageurl !== '')"><b-icon icon="card-image"  ></b-icon> Foto/Video</b-btn>
                     </b-col>
                     <b-col cols="12" class="d-block d-sm-none mt-2" ></b-col>
                     <b-col md="3" sm="4" cols="12" class="pull-right">
@@ -113,9 +118,7 @@
                     </b-col> 
                   </b-row>
                 
-                  <div class="my-4" v-if="post.attached != ''">
-                    <b-progress :value="post_upload_loader.progress" variant="info" striped animated></b-progress>
-                  </div>
+
                   
                   <div>
                     <b-btn variant="info" @click="createPost()" :disabled="(post.content === '') && (post.attached === '') && (imageurl === '')" ><i class="fa fa-share-square-o" aria-hidden="true"></i> Beitrag teilen</b-btn>
