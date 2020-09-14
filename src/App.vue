@@ -1,8 +1,8 @@
 <template>
   <div id="app" >
     <NavBar v-if="showNav"></NavBar>
-    <b-container >
-    <router-view/>
+    <b-container fluid="sm">
+      <router-view/>
     </b-container>
   </div>
 </template>
@@ -45,6 +45,9 @@ body, html{
 .btn-primary.disabled, .btn-primary:disabled {
     background-color: #8e24aa!important;
     border-color: #8e24aa!important;
+}
+.text-info{
+  color:--info!important;
 }
 .btn-info {
     color: #fff;

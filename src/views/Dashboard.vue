@@ -149,23 +149,23 @@
               </h6>
             </div>
             
- <b-dropdown size="lg" variant="light" no-caret dropleft class="pull-right position-absolute" style="top:.5rem;right:.5rem" v-if="post.userId === userProfile.userid">
-    <template v-slot:button-content>
-      <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-    </template>
-          
-    <b-dropdown-item  size="sm" @click="changePostStatus(post.id, !post.public)" v-if="post.userId === userProfile.userid">
-      <span v-if="post.public"><i class="fa fa-user-secret" aria-hidden="true"></i> Privat machen</span>
-      <span v-if="!post.public"><i class="fa fa-globe" aria-hidden="true"></i> Öffentlich machen</span>
-    </b-dropdown-item>
+          <b-dropdown variant="link" no-caret dropleft class="pull-right position-absolute text-black" style="top:.5rem;right:.5rem" v-if="post.userId === userProfile.userid">
+              <template v-slot:button-content>
+                <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+              </template>
+                    
+              <b-dropdown-item  size="sm" @click="changePostStatus(post.id, !post.public)" v-if="post.userId === userProfile.userid">
+                <span v-if="post.public"><i class="fa fa-user-secret" aria-hidden="true"></i> Privat machen</span>
+                <span v-if="!post.public"><i class="fa fa-globe" aria-hidden="true"></i> Öffentlich machen</span>
+              </b-dropdown-item>
 
-    <b-dropdown-divider></b-dropdown-divider>  
+              <b-dropdown-divider></b-dropdown-divider>  
 
-    <b-dropdown-item @click="editPost(post)" v-if="post.userId === userProfile.userid"><i class="fa fa-pencil mr-1" aria-hidden="true"></i> Bearbeiten</b-dropdown-item>
-    <b-dropdown-item @click="deletePost(post.id)" v-if="post.userId === userProfile.userid"><i class="fa fa-trash mr-1" aria-hidden="true"></i> Löschen</b-dropdown-item>
-  </b-dropdown>
+              <b-dropdown-item @click="editPost(post)" v-if="post.userId === userProfile.userid"><i class="fa fa-pencil mr-1" aria-hidden="true"></i> Bearbeiten</b-dropdown-item>
+              <b-dropdown-item @click="deletePost(post.id)" v-if="post.userId === userProfile.userid"><i class="fa fa-trash mr-1" aria-hidden="true"></i> Löschen</b-dropdown-item>
+            </b-dropdown>
 
-            <p class="pt-2" style="font-size:1.4em">{{post.content}}</p>
+            <p class="pt-2" >{{post.content}}</p>
 
 
             <!-- Attachment System -->
@@ -582,6 +582,9 @@ export default {
     border:1px solid #ebe6f3;
 
   }
+}
+.dropdown-toggle .fa{
+  color:#212121;
 }
 
 .text-light{
