@@ -20,6 +20,7 @@
 import { mapState, store } from 'vuex'
 
 export default {
+
   components: {
 
   },

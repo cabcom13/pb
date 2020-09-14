@@ -19,9 +19,10 @@ Vue.use(VueSimpleAlert);
 // Install BootstrapVue
 Vue.use(BootstrapVue)
 // Optionally install the BootstrapVue icon components plugin
-Vue.use(IconsPlugin)
+//Vue.use(IconsPlugin)
 
 Vue.config.productionTip = false
+
 
 let app
 auth.onAuthStateChanged(user => {

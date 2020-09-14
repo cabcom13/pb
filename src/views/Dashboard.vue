@@ -104,17 +104,13 @@
                   
                   <b-row class="mb-3" v-show="onFocus" >
                     <b-col md="9" sm="4" cols="12">
-                      <b-btn size="sm"  variant="light"  @click="addFile()" :disabled="(post.attached != '') || (imageurl !== '')"><b-icon icon="card-image"  ></b-icon> Foto/Video</b-btn>
+                      <b-btn size="sm"  variant="light"  @click="addFile()" :disabled="(post.attached != '') || (imageurl !== '')"><i class="fa fa-picture-o" aria-hidden="true"></i> Foto/Video</b-btn>
                     </b-col>
                     <b-col cols="12" class="d-block d-sm-none mt-2" ></b-col>
                     <b-col md="3" sm="4" cols="12" class="pull-right">
                     <b-form-select v-model="post.public" :options="options" size="sm"></b-form-select>
                  
-                    
-                      
-                      <!-- <b-form-checkbox v-model="post.public" name="check-button" switch class="mt-1 pointer" v-b-tooltip.hover title="Alle Benutzer können diesen Post sehen">
-                            <small>Öffentlicher Post </small>
-                      </b-form-checkbox> -->
+
                     </b-col> 
                   </b-row>
                 
@@ -135,10 +131,10 @@
           </b-button-group>
 
 
-        <div v-if="posts.length" class="mt-4">
+        <div v-if="posts.length" class="mt-4 ">
           <div v-for="post in posts" :key="post.id" >
-            <div  class="post my-3 shadow-sm p-3 rounded">
-            <div class="rounded bg-light pr-2 pl-2 text-muted">
+            <div  class="post my-3 shadow-sm p-3 rounded position-relative">
+            <div class="pr-2 pl-2 text-muted">
               <i class="fa fa-user-secret mr-2" v-if="!post.public" aria-hidden="true"></i>  
               <i class="fa fa-globe mr-2" v-if="post.public" aria-hidden="true"></i>  
               <h6 class="d-inline">
@@ -152,6 +148,23 @@
                 
               </h6>
             </div>
+            
+ <b-dropdown size="lg" variant="light" no-caret dropleft class="pull-right position-absolute" style="top:.5rem;right:.5rem" v-if="post.userId === userProfile.userid">
+    <template v-slot:button-content>
+      <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+    </template>
+          
+    <b-dropdown-item  size="sm" @click="changePostStatus(post.id, !post.public)" v-if="post.userId === userProfile.userid">
+      <span v-if="post.public"><i class="fa fa-user-secret" aria-hidden="true"></i> Privat machen</span>
+      <span v-if="!post.public"><i class="fa fa-globe" aria-hidden="true"></i> Öffentlich machen</span>
+    </b-dropdown-item>
+
+    <b-dropdown-divider></b-dropdown-divider>  
+
+    <b-dropdown-item @click="editPost(post)" v-if="post.userId === userProfile.userid"><i class="fa fa-pencil mr-1" aria-hidden="true"></i> Bearbeiten</b-dropdown-item>
+    <b-dropdown-item @click="deletePost(post.id)" v-if="post.userId === userProfile.userid"><i class="fa fa-trash mr-1" aria-hidden="true"></i> Löschen</b-dropdown-item>
+  </b-dropdown>
+
             <p class="pt-2" style="font-size:1.4em">{{post.content}}</p>
 
 
@@ -214,19 +227,14 @@
             <b-img-lazy fluid-grow  :src="post.image"  blank-color="#cfd8dc" blank-width="1024" blank-height="768"></b-img-lazy>
 
             <div class="post-actions">
-                <b-button variant="link" size="sm" @click="toggleComment(post)"><b-icon icon="chat-fill" aria-hidden="true"></b-icon> {{ post.comments }}</b-button>
-                <b-button variant="link" size="sm" @click="likePost(post.id, post.likes)"><b-icon icon="hand-thumbs-up" aria-hidden="true"></b-icon> {{ post.likes }}</b-button>
-                <b-button variant="link" size="sm" @click="changePostStatus(post.id, !post.public)" v-if="post.userId === userProfile.userid">
-                  <span v-if="post.public"><i class="fa fa-user-secret" aria-hidden="true"></i> Privat machen</span>
-                  <span v-if="!post.public"><i class="fa fa-globe" aria-hidden="true"></i> Öffentlich machen</span>
-                </b-button>
-                <b-btn variant="link" size="sm" @click="editPost(post)" v-if="post.userId === userProfile.userid"><b-icon icon="pencil"></b-icon> Bearbeiten</b-btn>
-                <b-btn class="float-right text-danger" variant="link" size="sm" @click="deletePost(post.id)" v-if="post.userId === userProfile.userid"><i class="fa fa-trash" aria-hidden="true"></i></b-btn>
+                <b-button variant="link" size="sm" @click="toggleComment(post)"><i class="fa fa-comments" aria-hidden="true"></i>   {{ post.comments }}</b-button>
+                <b-button variant="link" size="sm" @click="likePost(post.id, post.likes)"><i class="fa fa-thumbs-up" aria-hidden="true"></i> {{ post.likes }}</b-button>
+              
             </div>
           
 
             <b-card v-if="showCommentSection == post.id" class="mt-3">
-            <b-btn size="sm" @click="close()" style="position:absolute; right:1em;z-index:1000"><b-icon icon="chevron-compact-up"></b-icon></b-btn>
+            <b-btn size="sm" @click="close()" style="position:absolute; right:1em;z-index:1000"><i class="fa fa-caret-up" aria-hidden="true"></i></b-btn>
             
             <CommentModal  :post="post" :user="userProfile" @update="toggleComment(post)"></CommentModal>
            

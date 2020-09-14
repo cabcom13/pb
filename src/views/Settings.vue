@@ -34,13 +34,13 @@
           </b-form>
         </b-col>
       </b-row>
-
+ <b-btn variant="link" @click="logout()">Logout</b-btn>
     </div>
   </section>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, store } from 'vuex'
 
 export default {
   data() {
@@ -56,7 +56,10 @@ export default {
     ...mapState(['userProfile', 'upload_loader'])
   },
   methods: {
-      addFile(){
+    logout() {
+      this.$store.dispatch('logout')
+    },
+    addFile(){
         const elem = this.$refs.myfile
         elem.click()
      
