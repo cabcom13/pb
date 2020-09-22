@@ -1,8 +1,8 @@
 <template>
 <div>
-    <b-navbar toggleable="lg" type="dark" style="background-color:#8e24aa">
+    <b-navbar  variant="faded" toggleable="lg" type="dark" style="background-color:#8e24aa">
         <b-container fluid>
-            <b-navbar-brand to="/"><strong>Pray</strong>book</b-navbar-brand>     
+            <b-navbar-brand to="/"> <img src="logo.png" class="" alt="Kitten"> <strong>Pray</strong>book</b-navbar-brand>     
              <b-dropdown id="mainmenu_dropdown" text="Dropdown Button" class="m-md-2" variant="link"  no-caret dropleft>
               <template v-slot:button-content >
                 <i class="fa fa-2x fa-ellipsis-v" aria-hidden="true"></i>

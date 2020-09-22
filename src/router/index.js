@@ -53,7 +53,12 @@ const router = new VueRouter({
 
 // This callback runs before every route change, including on page load.
 router.beforeEach((to, from, next) => {
-
+  const requiresAuth = to.matched.some(x => x.meta.requiresAuth)
+  if (requiresAuth && !auth.currentUser) {
+    next('/login')
+  } else {
+    next()
+  }
 
   const nearestWithTitle = to.matched.slice().reverse().find(r => r.meta && r.meta.title);
 
@@ -68,7 +73,13 @@ router.beforeEach((to, from, next) => {
   Array.from(document.querySelectorAll('[data-vue-router-controlled]')).map(el => el.parentNode.removeChild(el));
 
   // Skip rendering meta tags if there are none.
-  if(!nearestWithMeta) return next();
+  if(!nearestWithMeta){
+    if (requiresAuth && !auth.currentUser) {
+      return next('/login')
+    } else {
+      return next()
+    }
+  }
 
   // Turn the meta tag definitions into actual elements in the head.
   nearestWithMeta.meta.metaTags.map(tagDef => {
@@ -86,12 +97,7 @@ router.beforeEach((to, from, next) => {
   // Add the meta tags to the document head.
   .forEach(tag => document.head.appendChild(tag));
 
-  const requiresAuth = to.matched.some(x => x.meta.requiresAuth)
-  if (requiresAuth && !auth.currentUser) {
-    next('/login')
-  } else {
-    next()
-  }
+
 
 
 

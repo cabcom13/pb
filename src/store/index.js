@@ -126,7 +126,7 @@ const store = new Vuex.Store({
               youtubeid: post.youtubeid
             })
           })
-          console.log(postsArray)
+        
           commit('setPosts', postsArray)
         })
     },

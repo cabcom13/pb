@@ -6,10 +6,10 @@
           <div class="create-post mt-4 mb-5 rounded" >
             <b-form @submit.prevent>
                   <b-row>
-                    <b-col cols="3" sm="3" md="2">
+                    <b-col cols="3" sm="2" md="1">
                       <UserPanel></UserPanel>
                     </b-col>
-                    <b-col cols="9" sm="9" md=10>
+                    <b-col cols="9" sm="10" md=11>
                       <textarea @click="setFocus()" :rows="textareaRows" class="textarea mb-3" style="width:100%;" v-model.trim="post.content" placeholder="Lass deiner Fantasie freien lauf...." v-on:input="watchVideoUrl"></textarea>
                     </b-col>
                   </b-row> 
