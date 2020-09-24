@@ -1,19 +1,17 @@
 <template>
 <div id="dashboard">
+
+<UserPanel @triggerModal="test()"></UserPanel>
+
  <b-row>
 
     <b-col sm="12" md="12" order-md="1" order-sm="2">
-          <div class="create-post mt-4 mb-5 rounded" >
+          <b-collapse id="postform">
+          <div class="create-post mt-4 mb-5 rounded " >
             <b-form @submit.prevent>
-                  <b-row>
-                    <b-col cols="3" sm="2" md="1">
-                      <UserPanel></UserPanel>
-                    </b-col>
-                    <b-col cols="9" sm="10" md=11>
-                      <textarea @click="setFocus()" :rows="textareaRows" class="textarea mb-3" style="width:100%;" v-model.trim="post.content" placeholder="Lass deiner Fantasie freien lauf...." v-on:input="watchVideoUrl"></textarea>
-                    </b-col>
-                  </b-row> 
-              
+          
+                 <textarea ref="posttextarea" @click="setFocus()" :rows="textareaRows" class="textarea mb-3" style="width:100%;" v-model.trim="post.content" placeholder="Lass deiner Fantasie freien lauf...." v-on:input="watchVideoUrl"></textarea>
+               
                   <b-row class="my-3">
                     <b-col cols="12" md="2">
                       <b-img fluid v-if="imageurl" :src="imageurl" ></b-img>
@@ -102,7 +100,7 @@
                   <input type="file" size="50" accept="image/*" ref="myfile" style="display:none;" @change="onFileChange">
                   <hr />
                   
-                  <b-row class="mb-3" v-show="onFocus" >
+                  <b-row class="mb-3"  >
                     <b-col md="9" sm="4" cols="12">
                       <b-btn size="sm"  variant="light"  @click="addFile()" :disabled="(post.attached != '') || (imageurl !== '')"><i class="fa fa-picture-o" aria-hidden="true"></i> Foto/Video</b-btn>
                     </b-col>
@@ -120,17 +118,15 @@
                     <b-btn variant="info" @click="createPost()" :disabled="(post.content === '') && (post.attached === '') && (imageurl === '')" ><i class="fa fa-share-square-o" aria-hidden="true"></i> Beitrag teilen</b-btn>
                   </div>        
             </b-form>
-            
+         
           </div>
-
-          <hr />
-
-          <b-button-group>
+           </b-collapse>
+          <b-container>
+          <b-button-group class="mt-5" size="sm">
                 <b-button :variant="!showPublic ? 'info' : 'light'" @click="changePrivatePublic(true)"><i class="fa fa-user-secret" aria-hidden="true"></i> Meine Tagebucheinträge</b-button>
                 <b-button :variant="showPublic ? 'info' : 'light'" @click="changePrivatePublic(false)"><i class="fa fa-globe" aria-hidden="true"></i> Öffentliche Einträge</b-button> 
           </b-button-group>
-
-
+          </b-container>
         <div v-if="posts.length" class="mt-4 ">
           <div v-for="post in posts" :key="post.id" >
             <div  class="post my-3 shadow-sm p-3 rounded position-relative">
@@ -249,8 +245,8 @@
               <div v-for="comment in comments" :key="comment.id" class="comment my-3" >
                 <b-container>
                 <b-row class="py-2">
-                    <b-col cols="2" md="1" class="px-0"><b-img fluid rounded :text="comment.userName  | initial" :src="comment.avatar"></b-img></b-col>
-                    <b-col cols="10" md=11>
+                    <b-col cols="1" md="1" class="px-0"><b-img fluid rounded :text="comment.userName  | initial" :src="comment.avatar"></b-img></b-col>
+                    <b-col cols="11" md=11>
                       <div class="comment-bubbel py-1 px-2 rounded">
                       <p><strong>{{ comment.userName }}</strong> {{ comment.content }}</p>
                       
@@ -284,7 +280,6 @@
     </b-col>
 
   </b-row>
-
 
 <b-modal id="modal-1" size="xl" title="Beitrag bearbeiten" @ok="updatePost">
     <b-form>
@@ -342,7 +337,7 @@ export default {
   },
   data() {
     return {
-      textareaRows:1,
+      textareaRows:6,
       onFocus: false,
       post: {
         content: '',
@@ -393,14 +388,26 @@ export default {
     ...mapState(['userProfile', 'posts', 'post_upload_loader', 'comments', 'showCommentsLoader'])
    },
   methods: {
-    setLostFocus(){
-      this.onFocus = false
-      this.textareaRows = 1
+    test(){
+      this.$root.$emit('bv::toggle::collapse', 'postform')
+      if(this.onFocus){
+        this.onFocus = false
+      } else {
+        this.onFocus = true
+      }
+
+
+      this.$nextTick(() => {
+        if(this.onFocus){
+          this.$refs.posttextarea.focus()
+          this.$refs.posttextarea.scrollIntoView();
+        }
+
+      })
+
+      
     },
-    setFocus(){
-      this.onFocus = true
-      this.textareaRows = 4
-    },
+
     updatePost(){
         //dispatch here
         this.$store.dispatch('updatePost',this.editPostObj )
@@ -595,7 +602,14 @@ export default {
 }
 .create-post {
   padding:1rem;
+  min-height: 90vH;
   background:#fff;
+-webkit-box-shadow: 0px 0px 17px -2px rgba(0,0,0,0.64);
+-moz-box-shadow: 0px 0px 17px -2px rgba(0,0,0,0.64);
+box-shadow: 0px 0px 17px -2px rgba(0,0,0,0.64);
+  textarea{
+    min-height: 60vH;
+  }
 }
 .post-actions{
   color:#212121!important;
@@ -609,4 +623,5 @@ export default {
 .pointer{
   cursor: pointer;
 }
+
 </style>

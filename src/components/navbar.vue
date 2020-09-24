@@ -1,6 +1,6 @@
 <template>
 <div>
-    <b-navbar  variant="faded" toggleable="lg" type="dark" style="background-color:#8e24aa">
+    <b-navbar  variant="faded" toggleable="lg" type="dark" class="navbar_bg no-shadow" >
         <b-container fluid>
             <b-navbar-brand to="/"> <img src="logo.png" class="" alt="Kitten"> <strong>Pray</strong>book</b-navbar-brand>     
              <b-dropdown id="mainmenu_dropdown" text="Dropdown Button" class="m-md-2" variant="link"  no-caret dropleft>
@@ -11,12 +11,9 @@
               <b-dropdown-item to="/settings"><i class="fa fa-cogs mr-2" aria-hidden="true"></i> Einstellungen</b-dropdown-item>
               <b-dropdown-divider></b-dropdown-divider>
               <b-dropdown-item><i class="fa fa-sign-out mr-2" aria-hidden="true"></i> Ausloggen</b-dropdown-item>
-
             </b-dropdown>     
         </b-container>
     </b-navbar>
-
-
 </div>
 </template>
 <script>
@@ -49,6 +46,10 @@ export default {
 }
 #mainmenu_dropdown button .fa{
   color:#fff!important;
+}
+.navbar_bg{
+  background-color:#546e7a;
+
 }
 </style>>
 

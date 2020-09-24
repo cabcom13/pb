@@ -4,20 +4,10 @@
     <b-form style="position:relative;">
         <h6>Schreibe einen Kommentar</h6>
 
- <b-input-group class="my-4">
-    <b-input-group-prepend class="mr-3">
-      <b-avatar size="2.3rem" square class="rounded" :src="user.avatar" :text="user.name.charAt(0)"></b-avatar>
-    </b-input-group-prepend>
 
-    <b-input  v-model.trim="comment" placeholder="Lass deiner Fantasie freien lauf...."></b-input>
+            <b-textarea class="my-3" v-model.trim="comment" placeholder="Lass deiner Fantasie freien lauf...."></b-textarea>
 
-    <b-input-group-append>
-     <b-button variant="info" @click="addComment()" :disabled="comment === ''"><b-icon icon="check2"></b-icon></b-button>
-    </b-input-group-append>
-  </b-input-group>
-        
-        
-
+          <b-button variant="info" @click="addComment()" :disabled="comment === ''"><i class="fa fa-paper-plane"></i> Kommentar abschicken</b-button>
 
     </b-form>
     <hr />

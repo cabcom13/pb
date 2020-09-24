@@ -1,17 +1,15 @@
 <template>
   <div id="app" >
     <NavBar v-if="showNav"></NavBar>
-    <b-container fluid="sm">
+   <b-container fluid class="container-nogutter">
       <router-view/>
-    </b-container>
+   </b-container>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-
 import NavBar from '@/components/navbar'
-
 export default {
   components: {
 
@@ -27,20 +25,15 @@ export default {
   }
   },
   methods: {
-      shareViaWebShare() {
-        navigator.share({
-          title: 'Title to be shared',
-          text: 'Text to be shared',
-          url: 'URL to be shared'
-        })
-      }
+
   }
 }
 </script>
 <style>
 body, html{
-  background:rgba(21,21,21,.03)!important;
+  background: rgb(240,240,240)!important;
   min-height:100vh;
+  font-size:.9em;
 }
 .btn-primary.disabled, .btn-primary:disabled {
     background-color: #8e24aa!important;
@@ -76,5 +69,11 @@ body, html{
     --danger: #dc3545;
     --light: #f8f9fa;
     --dark: #343a40;
+
 }
+.container-nogutter {
+      padding:0!important;
+    
+    }
+
 </style>
