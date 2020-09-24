@@ -542,7 +542,7 @@ export default {
       this.post.youtubeid = ''
       this.post.public = false
       this.post.attached = ''
-      this.setLostFocus()
+      this.test()
 
     },
     deleteComment(comemntid, post){
@@ -608,7 +608,7 @@ export default {
 -moz-box-shadow: 0px 0px 17px -2px rgba(0,0,0,0.64);
 box-shadow: 0px 0px 17px -2px rgba(0,0,0,0.64);
   textarea{
-    min-height: 60vH;
+    min-height: 30vH;
   }
 }
 .post-actions{
