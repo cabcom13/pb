@@ -9,9 +9,45 @@
           <b-collapse id="postform">
           <div class="create-post mt-4 mb-5 rounded " >
             <b-form @submit.prevent>
-          
-                 <textarea ref="posttextarea" @click="setFocus()" :rows="textareaRows" class="textarea mb-3" style="width:100%;" v-model.trim="post.content" placeholder="Lass deiner Fantasie freien lauf...." v-on:input="watchVideoUrl"></textarea>
-               
+        
+                <textarea v-if="!this.showTextImageCreator" ref="posttextarea" @click="setFocus()" :rows="textareaRows" class="textarea mb-3" style="width:100%;" v-model.trim="post.content" placeholder="Lass deiner Fantasie freien lauf...." v-on:input="watchVideoUrl"></textarea>
+                <div v-if="this.showTextImageCreator">
+                  <div class="row h-50">
+                    <div class="col-sm-12 h-100 d-table">
+                      <div ref="printMe" class="card card-block d-table-cell align-middle text-center" :style="{ backgroundColor: post.textimage.backgroundcolor, height: '600px' }">
+                        <div @input="update_textimage_text" contenteditable="true" role="textbox" spellcheck="true" tabindex="0" style="outline: none; user-select: text; white-space: pre-wrap; overflow-wrap: break-word;" :style="{ color: post.textimage.color, fontSize:post.textimage.fontsize+'em' }">
+                          {{post.textimage.text}}
+                        </div>
+                        <!-- <input type="text" maxlength="100" v-model="post.textimage.text" class="textimage_input" style="border:none" :style="{ color: post.textimage.color, fontSize:post.textimage.fontsize+'em' }" placeholder="Lass deiner Fantasie freien lauf..." /> -->
+                      </div>
+                    </div>
+                  </div>
+                  <strong class="my-2 d-block">{{post.textimage.text.length}} / 100 Zeichen</strong>
+                  <div style="border:1px solid rgba(21,21,21,.2);" class="p-2">
+                    <p class="mt-2">Hintergrundfarbe</p>
+                    <v-swatches v-model="post.textimage.backgroundcolor" inline shapes="circles" swatch-size="30"></v-swatches>
+                  </div>
+                  <div style="border:1px solid rgba(21,21,21,.2);border-top:none;" class="p-2">
+                    <b-row>
+                        <b-col cols="4" style="border-right:1px solid rgba(21,21,21,.2);">
+                          <div  class="px-2">
+                            <p class="mt-2">Schriftfarbe</p>
+                            <v-swatches v-model="post.textimage.color" inline shapes="circles" swatch-size="30" :swatches="swatches"></v-swatches>
+                          </div>
+                        </b-col>
+                        <b-col cols="4" style="border-right:1px solid rgba(21,21,21,.2);">
+                          <div  class="px-2">
+                            <b-form-input id="range-1" v-model="post.textimage.fontsize" type="range" min="1" max="5"></b-form-input>
+                            <span>{{post.textimage.fontsize}}</span>
+                          </div>
+                        </b-col>
+                        <b-col cols="4">
+                          asdasd
+                        </b-col>
+                    </b-row>
+                  </div>
+                  
+                </div>
                   <b-row class="my-3">
                     <b-col cols="12" md="2">
                       <b-img fluid v-if="imageurl" :src="imageurl" ></b-img>
@@ -99,11 +135,13 @@
                   <!-- ####################### Image File System ######################## -->
                   <input type="file" size="50" accept="image/*" ref="myfile" style="display:none;" @change="onFileChange">
                   <hr />
-                  
+                
                   <b-row class="mb-3"  >
                     <b-col md="9" sm="4" cols="12">
-                      <b-btn size="sm"  variant="light"  @click="addFile()" :disabled="(post.attached != '') || (imageurl !== '')"><i class="fa fa-picture-o" aria-hidden="true"></i> Foto/Video</b-btn>
+                      <b-btn size="sm" class="mr-2" variant="light"  @click="addFile()" :disabled="(post.attached != '') || (imageurl !== '') || (this.showTextImageCreator)"><i class="fa fa-picture-o" aria-hidden="true"></i> Foto/Video</b-btn>
+                      <b-btn size="sm" variant="light"  @click="showTextImageCreator = true" ><i class="fa fa-picture-o" aria-hidden="true"></i> Colorblock</b-btn>
                     </b-col>
+                    
                     <b-col cols="12" class="d-block d-sm-none mt-2" ></b-col>
                     <b-col md="3" sm="4" cols="12" class="pull-right">
                     <b-form-select v-model="post.public" :options="options" size="sm"></b-form-select>
@@ -113,9 +151,9 @@
                   </b-row>
                 
 
-                  
+                  <!-- && (post.attached === '') && (imageurl === '') && (post.textimage.text === '') -->
                   <div>
-                    <b-btn variant="info" @click="createPost()" :disabled="(post.content === '') && (post.attached === '') && (imageurl === '')" ><i class="fa fa-share-square-o" aria-hidden="true"></i> Beitrag teilen</b-btn>
+                    <b-btn variant="info" @click="createPost()" :disabled="post.content === '' && post.textimage.text === ''" ><i class="fa fa-share-square-o" aria-hidden="true"></i> Beitrag teilen</b-btn>
                   </div>        
             </b-form>
          
@@ -127,9 +165,9 @@
                 <b-button :variant="showPublic ? 'info' : 'light'" @click="changePrivatePublic(false)"><i class="fa fa-globe" aria-hidden="true"></i> Öffentliche Einträge</b-button> 
           </b-button-group>
           </b-container>
-        <div v-if="posts.length" class="mt-4 ">
+        <div v-if="posts.length" class="mt-4">
           <div v-for="post in posts" :key="post.id" >
-            <div  class="post my-3 shadow-sm p-3 rounded position-relative">
+            <div class="post my-3 shadow p-3 rounded position-relative" cols="12" col-lg="6">
             <div class="pr-2 pl-2 text-muted">
               <i class="fa fa-user-secret mr-2" v-if="!post.public" aria-hidden="true"></i>  
               <i class="fa fa-globe mr-2" v-if="post.public" aria-hidden="true"></i>  
@@ -160,6 +198,16 @@
               <b-dropdown-item @click="editPost(post)" v-if="post.userId === userProfile.userid"><i class="fa fa-pencil mr-1" aria-hidden="true"></i> Bearbeiten</b-dropdown-item>
               <b-dropdown-item @click="deletePost(post.id)" v-if="post.userId === userProfile.userid"><i class="fa fa-trash mr-1" aria-hidden="true"></i> Löschen</b-dropdown-item>
             </b-dropdown>
+
+                <div class="pt-2" v-if="Object.keys(post.textimage).length !== 0 && post.textimage.text != ''">
+                  <div class="row h-50">
+                    <div class="col-sm-12 h-100 d-table">
+                      <div ref="printMe" class="card card-block d-table-cell align-middle text-center" :style="{ backgroundColor: post.textimage.backgroundcolor, height: '600px' }">
+                        <p :style="{ color: post.textimage.color, fontSize:post.textimage.fontsize+'em', wordBreak: 'break-all'  }">{{post.textimage.text}}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
             <p class="pt-2" >{{post.content}}</p>
 
@@ -280,7 +328,9 @@
     </b-col>
 
   </b-row>
-
+<b-modal id="modal-2" size="xl" title="" @ok="updatePost">
+  test
+</b-modal>
 <b-modal id="modal-1" size="xl" title="Beitrag bearbeiten" @ok="updatePost">
     <b-form>
 
@@ -321,12 +371,16 @@ import CommentModal from '@/components/CommentModal'
 import UserPanel from '@/components/UserPanel'
 // import FriendList from '@/components/FriendList'
 import * as fb from '../firebase'
+import VSwatches from 'vue-swatches'
+// Import the styles too, typically in App.vue or main.js
+import 'vue-swatches/dist/vue-swatches.css'
 
 
 export default {
   components: {
     CommentModal,
     UserPanel,
+    VSwatches
     // FriendList
 
   },
@@ -338,13 +392,23 @@ export default {
   data() {
     return {
       textareaRows:6,
+      
       onFocus: false,
+      swatches: [ '#FFFFFF', '#000000'],
+      showTextImageCreator: false,
+   
       post: {
         content: '',
         image:'',
         youtubeid: '',
         public:false,
-        attached: false
+        attached: false,
+        textimage:{
+          color:'#000000',
+          backgroundcolor: '#FFFFFF',
+          text:'',
+          fontsize: 2
+        },
       },
       lazyloadimgsrc:'https://via.placeholder.com/1200x768.png?text=PrayBook',
       selectedPost: {},
@@ -387,7 +451,31 @@ export default {
   computed: {
     ...mapState(['userProfile', 'posts', 'post_upload_loader', 'comments', 'showCommentsLoader'])
    },
+
   methods: {
+    update_textimage_text:function(event){
+      // this.$emit('update',event.target.innerText);
+     
+      this.post.textimage.text = event.target.innerText
+    
+    },
+    async print() {
+      const el = this.$refs.printMe;
+
+
+      this.$nextTick(() => {
+
+      })
+     
+    },
+    dataURItoBlob(dataURI) {
+      var arr = dataURI.split(','), mime = arr[0].match(/:(.*?);/)[1];
+      return new Blob([atob(arr[1])], {type:mime});
+    },
+    addTextImage(){
+      this.$bvModal.show('modal-2')
+    },
+
     test(){
       this.$root.$emit('bv::toggle::collapse', 'postform')
       if(this.onFocus){
@@ -455,22 +543,7 @@ export default {
               this.post.content = newtext  
           }
     },
-    // watchVideoUrl:function(){
-    //   let youtube_video_reg = /(?:https?:\/\/)?(?:www\.)?youtu\.?be(?:\.com)?\/?.*(?:watch|embed)?(?:.*v=|v\/|\/)([\w-_]+)/i
-    //   if(this.post.youtubeid == ''){
-    //     if(this.post.content.match(youtube_video_reg)){
-    //       this.post.youtubeid = this.youtubeid(this.post.content)
-          
-    //       let youtube_video_reg = /(?:https?:\/\/)?(?:www\.)?youtu\.?be(?:\.com)?\/?.*(?:watch|embed)?(?:.*v=|v\/|\/)([\w-_]+)/i
-    //       let newtext =  this.post.content.replace(youtube_video_reg,'')
-    //       this.post.content = newtext
-    //     } else {
-    //       this.post.youtubeid = ''
-    //     }
-    //   }
-    //   //
-        
-    // },
+
     youtubeid: function(url){
         var ID = '';
         url = url.replace(/(>|<)/gi,'').split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/);
@@ -516,6 +589,7 @@ export default {
     onFileChange(e) {
       const file = e.target.files[0];
       this.post.image = file
+      console.log(file)
       if(file){
         this.imageurl = URL.createObjectURL(file);
       }
@@ -542,6 +616,12 @@ export default {
       this.post.youtubeid = ''
       this.post.public = false
       this.post.attached = ''
+      this.post.imagetext = {
+          color:'#000000',
+          backgroundcolor: '#FFFFFF',
+          text:'',
+          fontsize: 2
+        }
       this.test()
 
     },
@@ -602,11 +682,11 @@ export default {
 }
 .create-post {
   padding:1rem;
-  min-height: 90vH;
+  min-height: 60vH;
   background:#fff;
--webkit-box-shadow: 0px 0px 17px -2px rgba(0,0,0,0.64);
--moz-box-shadow: 0px 0px 17px -2px rgba(0,0,0,0.64);
-box-shadow: 0px 0px 17px -2px rgba(0,0,0,0.64);
+  -webkit-box-shadow: 0px 0px 17px -2px rgba(0,0,0,0.64);
+  -moz-box-shadow: 0px 0px 17px -2px rgba(0,0,0,0.64);
+  box-shadow: 0px 0px 17px -2px rgba(0,0,0,0.64);
   textarea{
     min-height: 30vH;
   }
@@ -623,5 +703,15 @@ box-shadow: 0px 0px 17px -2px rgba(0,0,0,0.64);
 .pointer{
   cursor: pointer;
 }
+.textimage_input{
+  border:none;
+  background:transparent;
+  
+  text-align: center;
+  width:80%;
+}
 
+.textimage_input:focus, .textimage_input:focus{
+    outline: none;
+}
 </style>

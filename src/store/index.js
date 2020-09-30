@@ -123,7 +123,8 @@ const store = new Vuex.Store({
               public: post.public,
               userId: post.userId,
               userName: post.userName,
-              youtubeid: post.youtubeid
+              youtubeid: post.youtubeid,
+              textimage: Object.assign({}, post.textimage)
             })
           })
         
@@ -142,20 +143,22 @@ const store = new Vuex.Store({
         snapshot.forEach(doc => {
           let post = doc.data()
           post.id = doc.id
-
-          postsArray.push({
-            attached: Object.assign({}, post.attached),
-            comments: post.comments,
-            content: post.content,
-            createdOn: post.createdOn,
-            id: post.id,
-            image: post.image,
-            likes: post.likes,
-            public: post.public,
-            userId: post.userId,
-            userName: post.userName,
-            youtubeid: post.youtubeid
-          })
+          if(userid != post.userId){
+            postsArray.push({
+              attached: Object.assign({}, post.attached),
+              comments: post.comments,
+              content: post.content,
+              createdOn: post.createdOn,
+              id: post.id,
+              image: post.image,
+              likes: post.likes,
+              public: post.public,
+              userId: post.userId,
+              userName: post.userName,
+              youtubeid: post.youtubeid,
+              textimage: Object.assign({}, post.textimage)
+            })
+          }
         })
 
         commit('setPosts', postsArray)
@@ -267,10 +270,8 @@ const store = new Vuex.Store({
     },
 
     
-    async createPost1({ state, commit }, post) {
-console.log(post.content.attached.title)
-    },
     async createPost({ state, commit }, post) {
+console.log(post.content)
       const text = post.content.content
       const image = post.content.image
       const youtubeid = post.content.youtubeid
@@ -286,13 +287,14 @@ console.log(post.content.attached.title)
         image: '',
         userId: fb.auth.currentUser.uid,
         userName: state.userProfile.name,
+        textimage: post.content.textimage,
         comments: 0,
         likes: 0,
         attached:  post.content.attached
       })
   
       //upload image here
- 
+
       if(image instanceof Blob){
         commit('setPostUploadLoader',{
           status:true,

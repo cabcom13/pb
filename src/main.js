@@ -13,16 +13,17 @@ import VueToast from 'vue-toast-notification';
 import 'vue-toast-notification/dist/theme-default.css';
 import "font-awesome/css/font-awesome.min.css";
 //import 'vue-toast-notification/dist/theme-sugar.css';
-
-
+import VueHtml2Canvas from 'vue-html2canvas';
+import UUID from "vue-uuid";
+ 
+Vue.use(UUID);
+Vue.use(VueHtml2Canvas);
 Vue.use(VueToast);
 Vue.use(VueSimpleAlert);
 // Install BootstrapVue
 Vue.use(BootstrapVue)
 // Optionally install the BootstrapVue icon components plugin
 //Vue.use(IconsPlugin)
-
-
 
 Vue.config.productionTip = false
 

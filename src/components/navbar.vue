@@ -1,7 +1,7 @@
 <template>
 <div>
     <b-navbar  variant="faded" toggleable="lg" type="dark" class="navbar_bg no-shadow" >
-        <b-container fluid>
+        <b-container fluid="sm">
             <b-navbar-brand to="/"> <img src="logo.png" class="" alt="Kitten"> <strong>Pray</strong>book</b-navbar-brand>     
              <b-dropdown id="mainmenu_dropdown" text="Dropdown Button" class="m-md-2" variant="link"  no-caret dropleft>
               <template v-slot:button-content >

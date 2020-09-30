@@ -85,8 +85,10 @@ export default {
   width:100%;
   overflow: hidden;
 
-    @media (min-width: 1200px) { 
+    @media (min-width: 768px) { 
       min-height:45vH;
+      border-bottom-right-radius: 15px;
+      border-bottom-left-radius: 15px;
   }
 }
 .zite{

@@ -1,7 +1,7 @@
 <template>
   <div id="app" >
     <NavBar v-if="showNav"></NavBar>
-   <b-container fluid class="container-nogutter">
+   <b-container fluid="sm" class="container-nogutter">
       <router-view/>
    </b-container>
   </div>
