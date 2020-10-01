@@ -1,9 +1,15 @@
 <template>
   <div id="app" >
     <NavBar v-if="showNav"></NavBar>
-   <b-container fluid="sm" class="container-nogutter">
+   <b-container fluid  class="container-nogutter">
       <router-view/>
    </b-container>
+   <nav class="navbar bottom navbar-light bg-light shadow">
+     <b-container fluid>
+        <small> &copy; PrayBook 2020</small>
+     </b-container>
+  
+  </nav>
   </div>
 </template>
 
@@ -29,11 +35,13 @@ export default {
   }
 }
 </script>
-<style>
+<style lang="scss" >
+@import url('https://fonts.googleapis.com/css2?family=Meera+Inimai&display=swap');
 body, html{
-  background: rgb(240,240,240)!important;
+  font-family: 'Meera Inimai', sans-serif;
+  background: #F0F2F5!important;
   min-height:100vh;
-  font-size:.9em;
+  font-size:1em;
 }
 .btn-primary.disabled, .btn-primary:disabled {
     background-color: #8e24aa!important;
@@ -72,8 +80,16 @@ body, html{
 
 }
 .container-nogutter {
-      padding:0!important;
-    
-    }
+      
+      
+      overflow: hidden!important;
+      @media (max-width: 575.98px) {
+        padding:0!important;
+      }
+     @media (min-width: 768px) and (max-width: 991.98px) {
+          margin:0 15px!important;
+      }
+}
+
 
 </style>

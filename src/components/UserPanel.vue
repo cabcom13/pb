@@ -83,19 +83,27 @@ export default {
   background-size:cover;
   min-height:35vH;
   width:100%;
-  overflow: hidden;
 
-    @media (min-width: 768px) { 
-      min-height:45vH;
-      border-bottom-right-radius: 15px;
-      border-bottom-left-radius: 15px;
+  overflow: hidden;
+  border-bottom-left-radius: 1em;
+  border-bottom-right-radius: 1em;
+    @media (max-width: 575.98px) {
+      min-height:40vH;
+      border-bottom-left-radius: 0em;
+      border-bottom-right-radius: 0em;
   }
 }
 .zite{
+  @media (max-width: 575.98px) {
+      font-size:1.2rem;
 
+  }
+  opacity: .85;
   color:rgba(255,255,255,.8);
-  font-size:1.1rem;
-}
+  font-size:1.5rem;
+  letter-spacing: .08;
+  word-wrap: break-word;
+  }
 .avatar{
  
   

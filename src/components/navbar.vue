@@ -1,7 +1,7 @@
 <template>
 <div>
-    <b-navbar  variant="faded" toggleable="lg" type="dark" class="navbar_bg no-shadow" >
-        <b-container fluid="sm">
+    <b-navbar  variant="faded" toggleable="lg" type="light" class="navbar_bg shadow sticky-top" >
+        <b-container fluid>
             <b-navbar-brand to="/"> <img src="logo.png" class="" alt="Kitten"> <strong>Pray</strong>book</b-navbar-brand>     
              <b-dropdown id="mainmenu_dropdown" text="Dropdown Button" class="m-md-2" variant="link"  no-caret dropleft>
               <template v-slot:button-content >
@@ -42,13 +42,13 @@ export default {
 
 <style scoped>
 #mainmenu_dropdown{
-  color:#fff!important;
+  color:#212121!important;
 }
 #mainmenu_dropdown button .fa{
-  color:#fff!important;
+  color:#212121!important;
 }
 .navbar_bg{
-  background-color:#546e7a;
+  background-color:#fff;
 
 }
 </style>>

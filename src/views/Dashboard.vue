@@ -159,15 +159,24 @@
          
           </div>
            </b-collapse>
-          <b-container>
-          <b-button-group class="mt-5" size="sm">
-                <b-button :variant="!showPublic ? 'info' : 'light'" @click="changePrivatePublic(true)"><i class="fa fa-user-secret" aria-hidden="true"></i> Meine Tagebucheinträge</b-button>
-                <b-button :variant="showPublic ? 'info' : 'light'" @click="changePrivatePublic(false)"><i class="fa fa-globe" aria-hidden="true"></i> Öffentliche Einträge</b-button> 
-          </b-button-group>
+           <div class="mt-5" style="border-bottom: 1px solid #DEE2E6;">
+          <b-container fluid="sm" class="mt-5" >        
+            <b-tabs justified fill >
+              <template v-slot:tabs-end>
+                  <b-nav-item :active="!showPublic" href="#" role="presentation" @click="changePrivatePublic(true)"><i class="fa fa-user-secret" aria-hidden="true"></i> Meine Tagebucheinträge</b-nav-item>
+                  <b-nav-item :active="showPublic" href="#" role="presentation" @click="changePrivatePublic(false)" class="text-black"><i class="fa fa-globe" aria-hidden="true"></i> Alle Einträge</b-nav-item>
+
+              </template>
+            </b-tabs>
           </b-container>
+          </div>
         <div v-if="posts.length" class="mt-4">
+<masonry
+  :cols="{default: 4, 1000: 3, 700: 2, 400: 1}"
+  :gutter="{default: '30px', 700: '15px'}"
+  >
           <div v-for="post in posts" :key="post.id" >
-            <div class="post my-3 shadow p-3 rounded position-relative" cols="12" col-lg="6">
+            <div class="post my-3 p-3 position-relative">
             <div class="pr-2 pl-2 text-muted">
               <i class="fa fa-user-secret mr-2" v-if="!post.public" aria-hidden="true"></i>  
               <i class="fa fa-globe mr-2" v-if="post.public" aria-hidden="true"></i>  
@@ -202,8 +211,8 @@
                 <div class="pt-2" v-if="Object.keys(post.textimage).length !== 0 && post.textimage.text != ''">
                   <div class="row h-50">
                     <div class="col-sm-12 h-100 d-table">
-                      <div ref="printMe" class="card card-block d-table-cell align-middle text-center" :style="{ backgroundColor: post.textimage.backgroundcolor, height: '600px' }">
-                        <p :style="{ color: post.textimage.color, fontSize:post.textimage.fontsize+'em', wordBreak: 'break-all'  }">{{post.textimage.text}}</p>
+                      <div ref="printMe" class="py-5 card card-block d-table-cell align-middle text-center" :style="{ backgroundColor: post.textimage.backgroundcolor }">
+                        <p class="px-3 py-5" :style="{ color: post.textimage.color, fontSize:post.textimage.fontsize+'em', wordBreak: 'break-all'  }">{{post.textimage.text}}</p>
                       </div>
                     </div>
                   </div>
@@ -318,6 +327,7 @@
 
           </div>
         </div>
+</masonry>
         </div>
         <div v-else>
           <div  class="post my-3 shadow-sm p-3 rounded">
@@ -678,7 +688,18 @@ export default {
   font-weight: 100;
 }
 .post {
-  background:#fff;
+  background:#fff!important;
+  -webkit-box-shadow: 0px 2px 7px 2px rgba(181,181,181,0.42);
+  -moz-box-shadow: 0px 2px 7px 2px rgba(181,181,181,0.42);
+  box-shadow: 0px 2px 7px 2px rgba(181,181,181,0.42);
+@media (max-width: 575.98px) { 
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  border-radius: 0px;
+}
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
 }
 .create-post {
   padding:1rem;

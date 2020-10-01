@@ -15,18 +15,16 @@ import "font-awesome/css/font-awesome.min.css";
 //import 'vue-toast-notification/dist/theme-sugar.css';
 import VueHtml2Canvas from 'vue-html2canvas';
 import UUID from "vue-uuid";
- 
+import VueMasonry from 'vue-masonry-css'
+
 Vue.use(UUID);
 Vue.use(VueHtml2Canvas);
 Vue.use(VueToast);
 Vue.use(VueSimpleAlert);
 // Install BootstrapVue
 Vue.use(BootstrapVue)
-// Optionally install the BootstrapVue icon components plugin
-//Vue.use(IconsPlugin)
-
 Vue.config.productionTip = false
-
+Vue.use(VueMasonry);
 
 let app
 auth.onAuthStateChanged(user => {
