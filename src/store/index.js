@@ -380,7 +380,66 @@ console.log(post.content)
         likes: post.likesCount + 1
       })
     },
+    async updateProfileBackgroundImage({ dispatch,commit }, image) {
+      const userId = fb.auth.currentUser.uid
 
+      if(image instanceof Blob){
+        commit('setUploadLoader',{
+          status:true,
+          progress:0
+        })
+        
+        var uploadTask = fb.fs.ref('userbackgroundimages/'+`${userId}`).put(image)
+        uploadTask.then(response => {
+          response.ref.getDownloadURL().then((downloadURL) => {
+
+                  // update user object
+                const userRef = fb.usersCollection.doc(userId).update({
+                  backgroundImage: downloadURL
+                })
+                dispatch('fetchUserProfile', { uid: userId })
+          })             
+        });
+
+        uploadTask.on('state_changed',
+          function(snapshot) {
+            // onProgress
+            let percent = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+            commit('setUploadLoader',{
+              status:true,
+              progress:percent,
+              text:''
+            })
+
+          },
+          // Error function
+          function(e) {
+            commit('setUploadLoader',{
+               status:false,
+               progress:0,
+               text:e
+             }) 
+          },
+          // onComplett
+          function() {
+             commit('setUploadLoader',{
+                status:false,
+                progress:0,
+                text:'Profilbild gespeichert!'
+              }) 
+
+              setTimeout(() => {
+                commit('setUploadLoader',{
+                  status:false,
+                  progress:0,
+                  text:''
+                }) 
+              }, 4000)
+          })
+      }
+
+
+    },
     async updateProfileImage({ dispatch,commit }, image) {
       const userId = fb.auth.currentUser.uid
 

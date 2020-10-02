@@ -1,11 +1,11 @@
 <template>
   <div id="app" >
     <NavBar v-if="showNav"></NavBar>
-   <b-container fluid  class="container-nogutter">
+  
       <router-view/>
-   </b-container>
-   <nav class="navbar bottom navbar-light bg-light shadow">
-     <b-container fluid>
+  
+   <nav class="navbar fixed-bottom navbar-light bg-light no-shadow ">
+     <b-container fluid >
         <small> &copy; PrayBook 2020</small>
      </b-container>
   
@@ -79,17 +79,7 @@ body, html{
     --dark: #343a40;
 
 }
-.container-nogutter {
-      
-      
-      overflow: hidden!important;
-      @media (max-width: 575.98px) {
-        padding:0!important;
-      }
-     @media (min-width: 768px) and (max-width: 991.98px) {
-          margin:0 15px!important;
-      }
-}
+
 
 
 </style>

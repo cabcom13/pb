@@ -1,56 +1,64 @@
 <template>
   <section id="settings">
-    <div class="bg-white my-3 shadow-sm p-5 rounded">
-    <h3>Einstellungen</h3>
-    <img v-if="userAvatar" :src="userAvatar">
-    <button id="pick-avatar">Select an image</button>
+  <UserPanel 
+  @triggerModal="addFile()"
+  @addBackgroundImage="addBackgroundImage()"
+  :hideTrigger="true"
+  :showImageSwitch="true"
+  :showUserImage="true"
+  />
 
-     <b-alert v-if="showSuccess" variant="success" show>Profil update erfolgreich</b-alert>
-      <b-row class="mt-4">
-        <b-col sm="4">
-          <b-img size="lg" rounded :src="userProfile.avatar" fluid-grow></b-img>
-          <b-btn size="sm" block class="mt-2" variant="info"  @click="addFile()">Bild auswählen</b-btn>
-          <input  type="file" size="50" accept="image/*" ref="myfile" style="display:none;" @change="onFileChange">
 
-          <div v-if="upload_loader.status" class="my-3">
-            <small>Upload läuft...</small>
-          <b-progress  :value="upload_loader.progress" max="100" show-progress animated></b-progress>
-          </div>
-          <div>
-          <b-alert class="mt-3" :show="upload_loader.text != ''" variant="success">{{upload_loader.text}}</b-alert>
-          </div>
-        </b-col>
-        <b-col sm="8">
-          <b-form  @submit.prevent>
-            <div class="mb-3"> 
-                <label for="name">Benutzername</label>    
-                <b-form-input v-model.trim="name" name="name" :placeholder="userProfile.name" id="name"></b-form-input>
-            </div>
+    <b-container class="pt-5">
+    <h3>Hallo, {{userProfile.name}}</h3>
+    <input  type="file" size="50" accept="image/*" ref="myfile" style="display:none;" @change="onFileChange">
+    <input  type="file" size="50" accept="image/*" ref="mybgfile" style="display:none;" @change="onBackgroundImageChange"> 
 
-            <!-- <div> 
-                <label for="title">Title</label>   
-                <b-form-input  v-model.trim="title" name="title" :placeholder="userProfile.title" id="name"></b-form-input>
-            </div> -->
-
-            <b-btn class="mt-5" variant="info" @click="updateProfile()">Profile speichern</b-btn>
-          </b-form>
-        </b-col>
-      </b-row>
- <b-btn variant="link" @click="logout()">Logout</b-btn>
+    <div v-if="upload_loader.status" class="my-3">
+      <small>Upload läuft...</small>
+    <b-progress  :value="upload_loader.progress" max="100" show-progress animated></b-progress>
     </div>
+
+    <v-swatches v-model="userProfile.header_textcolor"  :show-border="true" :swatches="swatches" inline shapes="circles" swatch-size="30" background-color="transparent"></v-swatches>
+
+    <b-alert v-if="showSuccess" variant="success" show>Profil update erfolgreich</b-alert>
+    <b-alert class="mt-3" :show="upload_loader.text != ''" variant="success">{{upload_loader.text}}</b-alert>
+    <b-form  @submit.prevent>
+      <div class="mb-3"> 
+          <label for="name">Benutzername</label>    
+          <b-form-input v-model.trim="name" name="name" :placeholder="userProfile.name" id="name"></b-form-input>
+      </div>
+
+      <!-- <div> 
+          <label for="title">Title</label>   
+          <b-form-input  v-model.trim="title" name="title" :placeholder="userProfile.title" id="name"></b-form-input>
+      </div> -->
+
+      <b-btn class="mt-5" variant="info" @click="updateProfile()">Profile speichern</b-btn>
+    </b-form>
+
+ <b-btn variant="link" @click="logout()">Logout</b-btn>
+    </b-container>
   </section>
 </template>
 
 <script>
 import { mapState, store } from 'vuex'
+import UserPanel from '@/components/UserPanel'
+import VSwatches from 'vue-swatches'
+// Import the styles too, typically in App.vue or main.js
+import 'vue-swatches/dist/vue-swatches.css'
+
 
 export default {
-  components: { },
+  components: {UserPanel,VSwatches },
   data() {
     return {
+      swatches: [ '#FFFFFF', '#000000'],
       name: '',
       title: '',
       avatar: '',
+      backgroundImage: '',
       avatardata:'',
       showSuccess: false,
        userAvatar: undefined,
@@ -68,7 +76,21 @@ export default {
     addFile(){
         const elem = this.$refs.myfile
         elem.click()
-     
+    },
+    addBackgroundImage(){
+        const elem = this.$refs.mybgfile
+        elem.click()
+        
+    },
+    onBackgroundImageChange(e) {
+      const file = e.target.files[0];
+      
+      if(file){
+        this.userProfile.backgroundImage = URL.createObjectURL(file);
+        this.backgroundImage = file
+        this.$store.dispatch('updateProfileBackgroundImage', file)
+
+      }
     },
     onFileChange(e) {
       const file = e.target.files[0];

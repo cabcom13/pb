@@ -1,12 +1,19 @@
 <template>
  <div>
    <div class="position-relative ">
-      <div class="mb-5 avatar-card row align-items-center h-100 mx-0" v-bind:style="{ 'background-image': 'url(' + userProfile.headerimage + ')', 'background-color': this.background_color }">
-        <div class="mx-auto text-center text-white px-3 zite">
-            {{sentence_picker}}
+      <div class="mb-5 avatar-card row align-items-center h-100 mx-0" v-bind:style="{ 'background-image': 'url(' + userProfile.backgroundImage + ')', 'background-color': this.background_color, backgroundSize: 'cover' }">
+        <div class="mx-auto text-center text-white px-3 zite" :contenteditable="contenteditable" :style="{color: userProfile.header_textcolor}">
+             {{sentence_picker}}
+            
         </div>
       </div>
-      <a class="position-absolute avatar text-center text-white " @click="triggerModal()" > <i class="fa fa-4x fa-pencil" aria-hidden="true"></i></a>
+      <a v-if="!hideTrigger" class="position-absolute avatar text-center text-white " @click="triggerModal()" > <i class="fa fa-4x fa-pencil" aria-hidden="true"></i></a>
+      <b-button v-if="showImageSwitch" @click="addBackgroundImage()"  class="position-absolute" style="bottom:1em; right:1em;"><i class="fa fa-picture-o" aria-hidden="true"></i></b-button>
+      <div v-if="showUserImage"  @click="triggerModal()" class="position-absolute avatar-change avatar avatar-2x text-center text-white " :style="{backgroundImage:'url('+userProfile.avatar+')', backgroundSize:'cover', backgroundPosition: 'center center'}">
+   
+
+      </div>
+      
    </div>
   </div>
 
@@ -18,11 +25,13 @@
 import { mapState, store } from 'vuex'
 
 export default {
-  props: {
-    
+  props: ['hideTrigger', 'showImageSwitch', 'showUserImage', 'contenteditable'],
+  components: {
+   
   },
   data(){
     return {
+        
         sentences: [
           '„Ich bin gekommen, daß sie das Leben und volle Genüge haben sollen.“ —  Jesus von Nazareth',
           '„Ich bin in die Welt gekommen als ein Licht, damit, wer an mich glaubt, nicht in der Finsternis bleibe.“ —  Jesus von Nazareth',
@@ -43,9 +52,7 @@ export default {
         
     }
   },
-  components: {
 
-  },
   computed: {
     ...mapState(['userProfile']),
     sentence_picker(){
@@ -62,9 +69,13 @@ export default {
       this.$store.dispatch('logout')
     },
     triggerModal(){
-     
       this.$emit('triggerModal')
+    },
+    addBackgroundImage(){
+      this.$emit('addBackgroundImage')    
     }
+
+
   },
   filters: {
     
@@ -81,22 +92,16 @@ export default {
   background-position: center center;
   background-repeat: no-repeat;
   background-size:cover;
-  min-height:35vH;
+  min-height:55vH;
   width:100%;
 
   overflow: hidden;
-  border-bottom-left-radius: 1em;
-  border-bottom-right-radius: 1em;
-    @media (max-width: 575.98px) {
-      min-height:40vH;
-      border-bottom-left-radius: 0em;
-      border-bottom-right-radius: 0em;
-  }
+
 }
 .zite{
   @media (max-width: 575.98px) {
-      font-size:1.2rem;
-
+      font-size:1rem;
+      padding-bottom:3rem;
   }
   opacity: .85;
   color:rgba(255,255,255,.8);
@@ -104,6 +109,39 @@ export default {
   letter-spacing: .08;
   word-wrap: break-word;
   }
+.avatar-2x{
+  height:12em!important;
+  width:12em!important;
+  bottom: -7em !important;
+  @media (max-width: 575.98px) { 
+  height:8em!important;
+  width:8em!important;
+  bottom: -4em !important;
+  }
+}
+.avatar-change{
+  &:active {
+     &::after{
+        content:' ';
+        padding-top:5em;
+        position: absolute;
+        z-index:300;
+     }
+  }
+    &:hover{
+
+      &::after{
+        content:' ';
+        padding-top:5em;
+        position: absolute;
+        z-index:300;
+        background-color:rgba(21,21,21,.7);   
+      }
+    }
+
+
+
+}
 .avatar{
  
   
@@ -129,8 +167,7 @@ export default {
   }
   &:active {
     background:#616161;
- 
-}
+  }
 
   &::after{
     -webkit-box-shadow: inset 0px 1px 38px -26px rgba(0,0,0,1);
