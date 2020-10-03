@@ -3,7 +3,7 @@
    <div class="position-relative ">
       <div class="mb-5 avatar-card row align-items-center h-100 mx-0" v-bind:style="{ 'background-image': 'url(' + userProfile.backgroundImage + ')', 'background-color': this.background_color, backgroundSize: 'cover' }">
         <div class="mx-auto text-center text-white px-3 zite" :contenteditable="contenteditable" :style="{color: userProfile.header_textcolor}">
-             {{sentence_picker}}
+            <p v-text=" sentence_picker "></p>
             
         </div>
       </div>
@@ -56,14 +56,22 @@ export default {
   computed: {
     ...mapState(['userProfile']),
     sentence_picker(){
-      var chosenNumber = Math.floor(Math.random() * this.sentences.length);
-      return this.sentences[chosenNumber];
+      
+      if(this.userProfile.titleimage != 'undefined'){
+        return  this.userProfile.titleimage.text
+      } else {
+        var chosenNumber = Math.floor(Math.random() * this.sentences.length);
+        return this.sentences[chosenNumber];
+        
+      }
+
     },
     background_color(){
       var chosenNumber = Math.floor(Math.random() * this.colors.length);
       return this.colors[chosenNumber];
     }
   },
+
   methods: {
     logout() {
       this.$store.dispatch('logout')

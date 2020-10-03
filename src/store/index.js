@@ -502,11 +502,13 @@ console.log(post.content)
     },
     async updateProfile({ dispatch }, user) {
       const userId = fb.auth.currentUser.uid
-        
+        console.log(user)
         // update user object
         const userRef = await fb.usersCollection.doc(userId).update({
           name: user.name,
-          title: user.title
+          titleimage:{
+            text: user.titleimage_text
+          }
         })
 
         dispatch('fetchUserProfile', { uid: userId })
